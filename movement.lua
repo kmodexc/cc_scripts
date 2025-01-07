@@ -109,3 +109,27 @@ function move_z_to(z)
         end
     end
 end
+
+
+function init_gps()
+    x1,y1,z1 = gps.locate()
+    while true do
+        if turtle.forward() then
+            x2,y2,z2 = gps.locate()
+            if (x2 - x1) == dix_x and (y2 - y1) == dir_y then
+                return
+            end
+        end
+        turnLeft()
+    end
+end
+
+function move_to_gps(x,y,z)
+    init_gps()
+    cgx,cgy,cgz = gps.locate()
+    dx = x - cgx + current_x
+    dy = y - cgy + current_y
+    dz = z - cgz + current_z
+    move_z_to(dz)
+    move_to(dx,dy)
+end
