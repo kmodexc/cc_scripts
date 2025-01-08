@@ -132,8 +132,7 @@ function init_gps()
     x1,y1,z1 = gps.locate()
     while true do
         if turtle.forward() then
-            current_x = current_x + dir_x
-            current_y = current_y + dir_y
+            turtle.back()
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
             dz_gps = z2 - z1
@@ -154,18 +153,18 @@ function gps_to_local(x,y,z)
     tmp_dgx = dx_gps
     tmp_dgz = dz_gps
     rot_cnt = 0
-    print("tmp_dgx,tmp_dgz "..tmp_dgx.." "..tmp_dgz)
+    print("tmp_dgx,tmp_dgz ",tmp_dgx,tmp_dgz)
     while tmp_dgx ~= dir_x or tmp_dgz ~= dir_y do
         turnLeft()
         rot_cnt = rot_cnt + 1
-        print("rotated to dir_x,dir_y "..dir_x.." "..dir_y)
+        print("rotated to dir_x,dir_y ",dir_x,dir_y)
     end
 
     loc_dx,loc_dz = dx,dz
     print("dx,dz "..dx.." "..dz)
     for i=1,rot_cnt do
         loc_dx,loc_dz = rotate_vec_right(loc_dx,loc_dz)
-        print("rotated dx,dz "..loc_dx.." "..loc_dz)
+        print("rotated dx,dz ",loc_dx,loc_dz)
     end
 
     return loc_dx,loc_dz,(dy + current_z)
