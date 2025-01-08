@@ -136,7 +136,7 @@ function init_gps()
             dx_gps = x2 - x1
             dz_gps = z2 - z1
             turtle.back()
-            return
+            break
         end
         turnLeft()
     end
