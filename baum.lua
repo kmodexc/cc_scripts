@@ -1,4 +1,6 @@
 require("movement")
+
+print("Baum V1")
  
 function fell()
     move_to(0,1)
