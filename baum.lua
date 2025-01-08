@@ -96,9 +96,8 @@ while(true) do
         refuel()
         print("Unload")
         unload()
-        print("Reload Bone meal")
-        load_bone_meal()
     else
+        load_bone_meal()
         turtle.select(3)
         if turtle.getItemCount(3) > 1 then
             turtle.place()
