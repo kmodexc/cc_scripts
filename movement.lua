@@ -154,6 +154,10 @@ function gps_to_local(x,y,z)
     tmp_dgx = dx_gps
     tmp_dgz = dz_gps
     rot_cnt = 0
+    print(tmp_dgx)
+    print(tmp_dgy)
+    print(dir_x)
+    print(dir_y)
     while tmp_dgx ~= dir_x or tmp_dgz ~= dir_y do
         turnLeft()
         rot_cnt = rot_cnt + 1
