@@ -134,8 +134,10 @@ function init_gps()
         if turtle.forward() then
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
-            dy_gps = y2 - y1            
+            dy_gps = y2 - y1
+            return
         end
+        turnLeft()
     end
     print("gps initialized")
 end
