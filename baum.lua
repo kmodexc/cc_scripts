@@ -72,7 +72,7 @@ end
 
 function load_bone_meal()
     if turtle.getItemCount(3) < 10 then
-        move_to_gps(150,48,-74)
+        move_to_gps(148,49,-68)
         set_dir_gps(0,1)
         while turtle.getItemCount(3) < 60 do
             turtle.suck()
