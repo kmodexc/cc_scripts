@@ -1,10 +1,11 @@
-print("Version 1")
+version = 1
 current_x = 0
 current_y = 0
 dir_x = 0
 dir_y = 1
 dx_gps = 0
 dz_gps = 0
+print("Version",version)
 
 function rotate_vec_left(x,y)
     tmp_dx = x
