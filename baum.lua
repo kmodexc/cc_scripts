@@ -71,11 +71,13 @@ function unload()
 end
 
 function load_bone_meal()
-    move_to(0,-4)
-    set_dir(0,-1)
-    move_z_to(1)
-    while turtle.suck() do end
-    move_z_to(0)
+    if turtle.getItemCount(3) < 10 then
+        move_to_gps(150,48,-74)
+        set_dir_gps(0,1)
+        while turtle.getItemCount(3) < 60 do
+            turtle.suck()
+        end
+    end
 end
  
 while(true) do
