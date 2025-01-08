@@ -150,6 +150,7 @@ function init_gps()
         count_turn = count_turn + 1
     end
     print("gps initialized")
+    print("gps dir is",dx_gps,dz_gps)
 end
 
 function gps_to_local(x,y,z)
