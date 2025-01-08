@@ -1,6 +1,6 @@
 require("movement")
 
-print("Baum V2")
+print("Baum V3")
  
 function fell()
     move_to(0,1)
@@ -100,6 +100,7 @@ while(true) do
         refuel()
         print("Unload")
         unload()
+        break
     else
         load_bone_meal()
         turtle.select(3)
