@@ -3,7 +3,7 @@ current_y = 0
 dir_x = 0
 dir_y = 1
 dx_gps = 0
-dy_gps = 0
+dz_gps = 0
 
 function rotate_vec_left(x,y)
     tmp_dx = x
@@ -23,13 +23,13 @@ end
 
 function turnLeft()
     dir_x,dir_y = rotate_vec_left(dir_x,dir_y)
-    dx_gps,dy_gps = rotate_vec_left(dx_gps,dy_gps)
+    dx_gps,dz_gps = rotate_vec_left(dx_gps,dz_gps)
     turtle.turnLeft()
 end
 
 function turnRight()
     dir_x,dir_y = rotate_vec_right(dir_x,dir_y)
-    dx_gps,dy_gps = rotate_vec_right(dx_gps,dy_gps)
+    dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
     turtle.turnRight()
 end
 
@@ -150,19 +150,19 @@ function gps_to_local(x,y,z)
     dz = z - cgz
 
     tmp_dgx = dx_gps
-    tmp_dgy = dy_gps
+    tmp_dgz = dz_gps
     rot_cnt = 0
-    while tmp_dgx ~= dir_x or tmp_dgy ~= dir_y do
+    while tmp_dgx ~= dir_x or tmp_dgz ~= dir_y do
         turnLeft()
         rot_cnt = rot_cnt + 1
     end
 
-    loc_dx,loc_dy = dx,dy
+    loc_dx,loc_dz = dx,dz
     for i=1,rot_cnt do
-        lox_dx,loc_dy = rotate_vec_left(loc_dx,loc_dy)
+        lox_dx,loc_dz = rotate_vec_left(loc_dx,loc_dz)
     end
 
-    return loc_dx,loc_dy,(dz + current_z)
+    return loc_dx,(dy + current_y),loc_dz
 end
 
 function move_to_gps(x,y,z)
