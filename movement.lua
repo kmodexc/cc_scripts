@@ -154,16 +154,14 @@ function gps_to_local(x,y,z)
     tmp_dgx = dx_gps
     tmp_dgz = dz_gps
     rot_cnt = 0
-    print(tmp_dgx)
-    print(tmp_dgz)
-    print(dir_x)
-    print(dir_y)
+    print("tmp_dgx,tmp_dgz "..tmp_dgx.." "..tmp_dgz)
     while tmp_dgx ~= dir_x or tmp_dgz ~= dir_y do
         turnLeft()
         rot_cnt = rot_cnt + 1
+        print("rotated to dir_x,dir_y "..dir_x.." "..dir_y)
     end
 
-    loc_dx,loc_dz = -dx,dz
+    loc_dx,loc_dz = dx,dz
     print("dx,dz "..dx.." "..dz)
     for i=1,rot_cnt do
         loc_dx,loc_dz = rotate_vec_right(loc_dx,loc_dz)
