@@ -170,7 +170,7 @@ function gps_to_local(x,y,z)
         print("rotated dx,dz "..loc_dx.." "..loc_dz)
     end
 
-    return loc_dx,loc_dz,(dy + current_y)
+    return -loc_dx,loc_dz,(dy + current_y)
 end
 
 function move_to_gps(x,y,z)
