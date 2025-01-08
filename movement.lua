@@ -158,11 +158,13 @@ function gps_to_local(x,y,z)
     end
 
     loc_dx,loc_dz = dx,dz
+    print("dx,dz "..dx.." "..dz)
     for i=1,rot_cnt do
-        lox_dx,loc_dz = rotate_vec_left(loc_dx,loc_dz)
+        loc_dx,loc_dz = rotate_vec_left(loc_dx,loc_dz)
+        print("rotated dx,dz "..loc_dx.." "..loc_dz)
     end
 
-    return loc_dx,(dy + current_y),loc_dz
+    return loc_dx,loc_dz,(dy + current_y)
 end
 
 function move_to_gps(x,y,z)
