@@ -145,6 +145,8 @@ function init_gps()
 end
 
 function gps_to_local(x,y,z)
+    dx_gps = 0
+    dy_gps = 0
     init_gps()
     cgx,cgy,cgz = gps.locate()
     dx = x - cgx
