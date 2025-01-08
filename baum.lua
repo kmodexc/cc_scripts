@@ -1,6 +1,6 @@
 require("movement")
 
-print("Baum V1")
+print("Baum V2")
  
 function fell()
     move_to(0,1)
@@ -74,7 +74,7 @@ end
 
 function load_bone_meal()
     if turtle.getItemCount(3) < 10 then
-        move_to_gps(148,49,-68)
+        move_to_gps(148,48,-68)
         set_dir_gps(0,1)
         while turtle.getItemCount(3) < 60 do
             turtle.suck()
