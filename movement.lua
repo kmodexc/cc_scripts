@@ -1,4 +1,4 @@
-version = 2
+version = 3
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -131,17 +131,21 @@ function init_gps()
         return
     end
     print("init gps")
+    x1,y1,z1 = gps.locate()
+    count_turn = 0
     while true do
-        x1,y1,z1 = gps.locate()
         if turtle.forward() then
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
             dz_gps = z2 - z1
             sleep(1)
             turtle.back()
+            dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
+            dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
             break
         end
         turnLeft()
+        count_turn = count_turn + 1
     end
     print("gps initialized")
 end
