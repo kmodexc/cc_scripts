@@ -77,6 +77,8 @@ function load_bone_meal()
         while turtle.getItemCount(3) < 60 do
             turtle.suck()
         end
+        move_to(0,0)
+        move_z_to(0)
     end
 end
  
