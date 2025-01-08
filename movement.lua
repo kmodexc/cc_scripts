@@ -178,3 +178,9 @@ function move_to_gps(x,y,z)
     move_z_to(dz)
     move_to(dx,dy)
 end
+
+function set_dir_gps(dx,dz)
+    while dx_gps ~= dx or dz_gps ~= dz do
+        turnLeft()
+    end
+end
