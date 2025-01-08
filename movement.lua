@@ -135,6 +135,7 @@ function init_gps()
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
             dz_gps = z2 - z1
+            sleep(1)
             turtle.back()
             break
         end
