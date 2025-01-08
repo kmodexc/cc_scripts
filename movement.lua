@@ -140,8 +140,10 @@ function init_gps()
             dz_gps = z2 - z1
             sleep(1)
             turtle.back()
-            dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
-            dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
+            if count_turn % 2 == 1 then
+                dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
+                dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
+            end
             break
         end
         turnLeft()
