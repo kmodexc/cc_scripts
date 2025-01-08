@@ -2,20 +2,34 @@ current_x = 0
 current_y = 0
 dir_x = 0
 dir_y = 1
+dx_gps = 0
+dy_gps = 0
+
+function rotate_vec_left(x,y)
+    tmp_dx = x
+    tmp_dy = y
+    x = -tmp_dy
+    y = tmp_dx
+    return x,y
+end
+
+function rotate_vec_right(x,y)
+    tmp_dx = x
+    tmp_dy = y
+    x = tmp_dy
+    y = -tmp_dx
+    return x,y
+end
 
 function turnLeft()
-    tmp_dx = dir_x
-    tmp_dy = dir_y
-    dir_x = -tmp_dy
-    dir_y = tmp_dx
+    dir_x,dir_y = rotate_vec_left(dir_x,dir_y)
+    dx_gps,dy_gps = rotate_vec_left(dx_gps,dy_gps)
     turtle.turnLeft()
 end
 
 function turnRight()
-    tmp_dx = dir_x
-    tmp_dy = dir_y
-    dir_x = tmp_dy
-    dir_y = -tmp_dx
+    dir_x,dir_y = rotate_vec_right(dir_x,dir_y)
+    dx_gps,dy_gps = rotate_vec_right(dx_gps,dy_gps)
     turtle.turnRight()
 end
 
@@ -110,26 +124,47 @@ function move_z_to(z)
     end
 end
 
-
 function init_gps()
+    if dx_gps ~= 0 or dy_gps ~= 0 then
+        return
+    end
+    print("init gps")
     x1,y1,z1 = gps.locate()
     while true do
         if turtle.forward() then
             x2,y2,z2 = gps.locate()
-            if (x2 - x1) == dix_x and (y2 - y1) == dir_y then
-                return
-            end
+            dx_gps = x2 - x1
+            dy_gps = y2 - y1            
         end
-        turnLeft()
     end
+    print("gps initialized")
+end
+
+function gps_to_local(x,y,z)
+    init_gps()
+    cgx,cgy,cgz = gps.locate()
+    dx = x - cgx
+    dy = y - cgy
+    dz = z - cgz
+
+    tmp_dgx = dx_gps
+    tmp_dgy = dy_gps
+    rot_cnt = 0
+    while tmp_dgx ~= dir_x or tmp_dgy ~= dir_y do
+        turnLeft()
+        rot_cnt = rot_cnt + 1
+    end
+
+    loc_dx,loc_dy = dx,dy
+    for i=1,rot_cnt do
+        lox_dx,loc_dy = rotate_vec_left(loc_dx,loc_dy)
+    end
+
+    return loc_dx,loc_dy,(dz + current_z)
 end
 
 function move_to_gps(x,y,z)
-    init_gps()
-    cgx,cgy,cgz = gps.locate()
-    dx = x - cgx + current_x
-    dy = y - cgy + current_y
-    dz = z - cgz + current_z
+    dx,dy,dz = gps_to_local(x,y,z)
     move_z_to(dz)
     move_to(dx,dy)
 end
