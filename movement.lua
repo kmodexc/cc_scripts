@@ -125,7 +125,7 @@ function move_z_to(z)
 end
 
 function init_gps()
-    if dx_gps ~= 0 or dy_gps ~= 0 then
+    if dx_gps ~= 0 or dz_gps ~= 0 then
         return
     end
     print("init gps")
@@ -134,7 +134,7 @@ function init_gps()
         if turtle.forward() then
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
-            dy_gps = y2 - y1
+            dz_gps = z2 - z1
             return
         end
         turnLeft()
