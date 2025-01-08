@@ -1,4 +1,4 @@
-version = 1
+version = 2
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -131,8 +131,8 @@ function init_gps()
         return
     end
     print("init gps")
-    x1,y1,z1 = gps.locate()
     while true do
+        x1,y1,z1 = gps.locate()
         if turtle.forward() then
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
