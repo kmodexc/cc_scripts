@@ -1,4 +1,4 @@
-version = 8
+version = 9
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -162,13 +162,13 @@ function gps_to_local(x,y,z)
     while tmp_dgx ~= dir_y or tmp_dgz ~= dir_x do
         turnLeft()
         rot_cnt = rot_cnt + 1
-        print("1 rot")
+        --print("1 rot")
     end
 
     -- switch axis to my system
     for i=1,rot_cnt do
-        dx,dy = rotate_vec_left(dx,dy)
-        print("2 rot")
+        dx,dy = rotate_vec_right(dx,dy)
+        --print("2 rot")
     end
 
     return dx,dy,(dz + current_z)
