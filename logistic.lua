@@ -27,4 +27,9 @@ function main()
     end
 end
 
-main()
+if pcall(debug.getlocal, 4, 1) then
+    print("in package")
+else
+    print("in main script")
+    main()
+end
