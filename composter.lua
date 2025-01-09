@@ -6,6 +6,7 @@ while true do
                 turtle.turnLeft()
                 turtle.drop()
                 turtle.turnRight()
+            end
         end
     end
     turtle.turnLeft()
