@@ -1,9 +1,13 @@
 require("movement")
 
 function main()
-    x1,y1,z1,dx1,dz1 = arg[1],arg[2],arg[3],arg[4],arg[5]
-    x2,y2,z2,dx2,dz2 = arg[5],arg[6],arg[7],arg[8],arg[9]
-    num_items = arg[10]
+    arg_num = {}
+    for i=1,10 do
+        arg_num[i] = tonumber(arg[i])
+    end
+    x1,y1,z1,dx1,dz1 = arg_num[1],arg_num[2],arg_num[3],arg_num[4],arg_num[5]
+    x2,y2,z2,dx2,dz2 = arg_num[5],arg_num[6],arg_num[7],arg_num[8],arg_num[9]
+    num_items = arg_num[10]
     move_to_gps(x1,y1,z1)
     set_dir_gps(dx1,dz1)
     collected_count = 0
