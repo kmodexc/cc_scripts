@@ -13,6 +13,12 @@ function main()
             collected_count = collected_count + iter_col
         end
     end
+    move_to_gps(x1,y1,z1)
+    set_dir_gps(dx1,dz1)
+    for i=1,16 do
+        turtle.select(i)
+        turtle.drop()
+    end
 end
 
 main()
