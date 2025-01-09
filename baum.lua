@@ -83,29 +83,33 @@ function load_bone_meal()
         move_z_to(0)
     end
 end
- 
-while(true) do
-    turtle.select(1)
-    move_to(0,0)
-    set_dir(0,1)
-    if(turtle.compare()) then
-        print("Fell tree")
-        fell()
-        print("Place sapplings")
-        place()
-        print("Wait collect")
-        sleep(60)
-        print("Collect")
-        collect()
-        refuel()
-        print("Unload")
-        unload()
-        break
-    else
-        load_bone_meal()
-        turtle.select(3)
-        if turtle.getItemCount(3) > 1 then
-            turtle.place()
+
+function main()
+    while(true) do
+        turtle.select(1)
+        move_to(0,0)
+        set_dir(0,1)
+        if(turtle.compare()) then
+            print("Fell tree")
+            fell()
+            print("Place sapplings")
+            place()
+            print("Wait collect")
+            sleep(60)
+            print("Collect")
+            collect()
+            refuel()
+            print("Unload")
+            unload()
+            break
+        else
+            load_bone_meal()
+            turtle.select(3)
+            if turtle.getItemCount(3) > 1 then
+                turtle.place()
+            end
         end
     end
 end
+
+main()
