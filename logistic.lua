@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V1")
+print("Logistic V2")
 
 function main()
     arg_num = {}
@@ -10,6 +10,7 @@ function main()
     x1,y1,z1,dx1,dz1 = arg_num[1],arg_num[2],arg_num[3],arg_num[4],arg_num[5]
     x2,y2,z2,dx2,dz2 = arg_num[5],arg_num[6],arg_num[7],arg_num[8],arg_num[9]
     num_items = arg_num[10]
+    print("Get",num_items)
     move_to_gps(x1,y1,z1)
     set_dir_gps(dx1,dz1)
     collected_count = 0
