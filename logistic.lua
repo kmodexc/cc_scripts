@@ -1,5 +1,7 @@
 require("movement")
 
+print("Logistic V1")
+
 function main()
     arg_num = {}
     for i=1,10 do
