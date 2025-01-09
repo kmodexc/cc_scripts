@@ -1,4 +1,4 @@
-version = 5
+version = 6
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -158,7 +158,7 @@ function gps_to_local(x,y,z)
     tmp_dgx = dx_gps
     tmp_dgz = dz_gps
     rot_cnt = 0
-    while tmp_dgx ~= dir_y or tmp_dgz ~= dir_z do
+    while tmp_dgx ~= dir_y or tmp_dgz ~= dir_x do
         turnLeft()
         rot_cnt = rot_cnt + 1
         print("1 rot")
