@@ -25,13 +25,13 @@ end
 
 function turnLeft()
     dir_x,dir_y = rotate_vec_left(dir_x,dir_y)
-    dx_gps,dz_gps = rotate_vec_left(dx_gps,dz_gps)
+    dz_gps,dx_gps = rotate_vec_left(dz_gps,dx_gps)
     turtle.turnLeft()
 end
 
 function turnRight()
     dir_x,dir_y = rotate_vec_right(dir_x,dir_y)
-    dx_gps,dz_gps = rotate_vec_rigth(dx_gps,dz_gps)
+    dz_gps,dx_gps = rotate_vec_right(dz_gps,dx_gps)
     turtle.turnRight()
 end
 
