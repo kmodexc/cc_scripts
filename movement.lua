@@ -1,4 +1,4 @@
-version = 6
+version = 7
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -164,15 +164,14 @@ function gps_to_local(x,y,z)
         print("1 rot")
     end
 
-    loc_dx,loc_dz = dx,dz
-    loc_dz = -loc_dz
-    rot_cnt = rot_cnt + 2
+    -- switch axis to my system
+    loc_dx,loc_dy = dz,dx
     for i=1,rot_cnt do
-        loc_dx,loc_dz = rotate_vec_left(loc_dx,loc_dz)
+        loc_dx,loc_dy = rotate_vec_left(loc_dx,loc_dy)
         print("2 rot")
     end
 
-    return loc_dz,loc_dx,(dy + current_z)
+    return loc_dx,loc_dy,(dy + current_z)
 end
 
 function move_to_gps(x,y,z)
