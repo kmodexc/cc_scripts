@@ -1,4 +1,4 @@
-version = 4
+version = 5
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -25,13 +25,13 @@ end
 
 function turnLeft()
     dir_x,dir_y = rotate_vec_left(dir_x,dir_y)
-    dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
+    dx_gps,dz_gps = rotate_vec_left(dx_gps,dz_gps)
     turtle.turnLeft()
 end
 
 function turnRight()
     dir_x,dir_y = rotate_vec_right(dir_x,dir_y)
-    dx_gps,dz_gps = rotate_vec_left(dx_gps,dz_gps)
+    dx_gps,dz_gps = rotate_vec_rigth(dx_gps,dz_gps)
     turtle.turnRight()
 end
 
@@ -132,22 +132,15 @@ function init_gps()
     end
     print("init gps")
     x1,y1,z1 = gps.locate()
-    count_turn = 0
     while true do
         if turtle.forward() then
             x2,y2,z2 = gps.locate()
             dx_gps = x2 - x1
             dz_gps = z2 - z1
-            sleep(1)
             turtle.back()
-            if count_turn % 2 == 1 then
-                dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
-                dx_gps,dz_gps = rotate_vec_right(dx_gps,dz_gps)
-            end
             break
         end
         turnLeft()
-        count_turn = count_turn + 1
     end
     print("gps initialized")
     print("gps dir is",dx_gps,dz_gps)
@@ -165,23 +158,21 @@ function gps_to_local(x,y,z)
     tmp_dgx = dx_gps
     tmp_dgz = dz_gps
     rot_cnt = 0
-    print("tmp_dgx,tmp_dgz ",tmp_dgx,tmp_dgz)
-    while tmp_dgx ~= dir_x or tmp_dgz ~= dir_y do
+    while tmp_dgx ~= dir_y or tmp_dgz ~= dir_z do
         turnLeft()
         rot_cnt = rot_cnt + 1
-        print("rotated to dir_x,dir_y ",dir_x,dir_y)
+        print("1 rot")
     end
 
     loc_dx,loc_dz = dx,dz
     loc_dz = -loc_dz
-    print("dx,dz "..dx.." "..dz)
     rot_cnt = rot_cnt + 2
     for i=1,rot_cnt do
         loc_dx,loc_dz = rotate_vec_left(loc_dx,loc_dz)
-        print("rotated dx,dz ",loc_dx,loc_dz)
+        print("2 rot")
     end
 
-    return loc_dx,loc_dz,(dy + current_z)
+    return loc_dz,loc_dx,(dy + current_z)
 end
 
 function move_to_gps(x,y,z)
