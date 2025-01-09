@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V3")
+print("Logistic V4")
 
 function main()
     arg_num = {}
@@ -16,7 +16,7 @@ function main()
     collected_count = 0
     while collected_count < num_items do
         iter_col = math.min(64,num_items-collected_count)
-        if turtle.suck() then
+        if turtle.suck(iter_col) then
             collected_count = collected_count + iter_col
         end
     end
