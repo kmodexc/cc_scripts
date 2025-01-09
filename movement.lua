@@ -182,6 +182,9 @@ end
 
 function set_dir_gps(dx,dz)
     init_gps()
+    if (dx*dx + dz*dz) ~= 1 then
+        error("Error: set_dir_gps got wrong args:",dx,dy)
+    end
     while dx_gps ~= dx or dz_gps ~= dz do
         turnLeft()
     end
