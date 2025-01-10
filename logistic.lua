@@ -104,6 +104,14 @@ function controller()
             end
             chest = filled_chests[it_name]
             chest_str = vector_to_str(chest["pos"],chest["ori"])
+            logistic_turtle_id = nil
+            while not logistic_turtle_id do
+                print("search for logistic turtles")
+                logistic_turtle_id = rednet.lookup("remote_control")
+                if not logistic_turtle_id then
+                    sleep()
+                end
+            end
             msg = "logistic move "..input_str.." "..chest_str.." "..it_count
             print("send to chest",chest_str)
             rednet.broadcast(msg,"remote_control")
