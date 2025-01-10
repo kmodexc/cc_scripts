@@ -1,4 +1,5 @@
 require("movement")
+require("json")
 
 print("Logistic V8")
 
@@ -67,6 +68,7 @@ end
 function controller()
     num_chests = 3
     chest_cap = 27*64
+    
     storage_pos = vector.new(164,63,-46)
     storage_ori = vector.new(0,0,1)
     input_pos = vector.new(163,63,-46)
@@ -75,14 +77,30 @@ function controller()
     output_pos = vector.new(163,63,-48)
     output_ori = vector.new(-1,0,0)
     output_str = vector_to_str(output_pos,output_ori)
-    free_chests = {}
-    for i=1,num_chests do
-        free_chests[i] = {}
-        free_chests[i]["pos"] = storage_pos:add(vector.new(i-1,0,0))
-        free_chests[i]["ori"] = storage_ori
-        free_chests[i]["items"] = 0
+
+    datapath = "logistic_data.json"
+    if fs.find(datapath)[1] == nil then
+        free_chests = {}
+        for i=1,num_chests do
+            free_chests[i] = {}
+            free_chests[i]["pos"] = storage_pos:add(vector.new(i-1,0,0))
+            free_chests[i]["ori"] = storage_ori
+            free_chests[i]["items"] = 0
+        end
+        filled_chests = {}
+        logistic_data = {}
+        logistic_data["free"] = free_chests
+        logistic_data["filled"] = filled_chests
+        datastr = json.encode(logistic_data)
+        file = fs.open(datapath,"w")
+        file.write(datastr)
+        file.close()
+    else
+        data = json.decode(jsonFile(datapath))
+        filled_chests = data["filled"]
+        logistic_data = data["free"]
     end
-    filled_chests = {}
+    
     peripheral.find("modem", rednet.open)
     while true do
         cid,msg,prot = rednet.receive()
