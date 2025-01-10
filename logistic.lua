@@ -85,8 +85,8 @@ function controller()
     filled_chests = {}
     peripheral.find("modem", rednet.open)
     while true do
-        cid,msg,prot = rednet.receive("logistic_pre_sorter",1)
-        if cid then
+        cid,msg,prot = rednet.receive()
+        if cid and prot == "logistic_pre_sorter" then
             spl = mysplit(msg," ")
             it_name = spl[1]
             it_count = spl[2]
@@ -106,9 +106,7 @@ function controller()
             msg = "logistic move "..input_str.." "..chest_str.." "..it_count
             print("send to chest",chest_str)
             rednet.broadcast(msg,"remote_control")
-        end
-        cid,msg,prot = rednet.receive("logistic_request",1)
-        if cid then
+        elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             item_name = "minecraft:"..msg_split[1]
             it_count = to_number(msg_split[2])
