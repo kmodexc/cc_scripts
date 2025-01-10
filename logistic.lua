@@ -109,9 +109,9 @@ function controller()
             rednet.broadcast(msg,"remote_control")
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
-            print("process request for ",msg)
+            print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
-            it_count = to_number(msg_split[2])
+            it_count = tonumber(msg_split[2])
             chest = filled_chests[it_name]
             if chest then
                 chest_str = vector_to_str(chest["pos"],chest["ori"])
