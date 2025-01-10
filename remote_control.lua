@@ -5,10 +5,12 @@ function main()
         return
     end
     protocol = "remote_control"
-    peripheral.find("modem", rednet.open)
-    rednet.host(protocol, hostname)
     while true do
+        peripheral.find("modem", rednet.open)
+        rednet.host(protocol, hostname)
         id, msg = rednet.receive(protocol)
+        rednet.unhost(protocol, hostname)
+        peripheral.find("modem", rednet.close)
         print("Run from remote",id,"program",msg)
         shell.run(msg)
         if msg == "exit" then
