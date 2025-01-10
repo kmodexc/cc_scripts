@@ -22,7 +22,7 @@ function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
 end
 
 function chest_is_filled()
-    return peripheral.call("front","chest","list")[1] ~= nil
+    return peripheral.call("front", "list")[1] ~= nil
 end
 
 function pre_sorter()
