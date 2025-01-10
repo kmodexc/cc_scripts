@@ -106,6 +106,7 @@ function load_data(path)
         end
     end
     file.close()
+    return data
 end
 
 function controller()
@@ -122,9 +123,6 @@ function controller()
     output_pos = vector.new(168,63,-45)
     output_ori = vector.new(-1,0,0)
     output_str = vector_to_str(output_pos,output_ori)
-
-    local free_chests = nil
-    local filled_chests = nil
 
     datapath = "logistic_data.csv"
     if fs.find(datapath)[1] == nil then
@@ -144,9 +142,9 @@ function controller()
         logistic_data["filled"] = filled_chests
         save_data(logistic_data,datapath)
     else
-        load_data(datapath)
+        data = load_data(datapath)
         filled_chests = data["filled"]
-        logistic_data = data["free"]
+        free_chests = data["free"]
     end
     
     peripheral.find("modem", rednet.open)
