@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V15")
+print("Logistic V16")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -164,7 +164,7 @@ function controller()
                     end
                 end
             end
-            chest = logistic_data["free"][it_name]
+            chest = logistic_data["filled"][it_name]
             if not chest then
                 print("Could not process item. No free chest found!")
             elseif (chest["items"] + it_count) > chest_cap then

@@ -1,4 +1,4 @@
-version = 9
+version = 10
 current_x = 0
 current_y = 0
 dir_x = 0
@@ -147,8 +147,6 @@ function init_gps()
 end
 
 function gps_to_local(x,y,z)
-    dx_gps = 0
-    dy_gps = 0
     init_gps()
     cgx,cgy,cgz = gps.locate()
     dy = x - cgx
