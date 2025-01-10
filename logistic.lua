@@ -123,6 +123,9 @@ function controller()
     output_ori = vector.new(-1,0,0)
     output_str = vector_to_str(output_pos,output_ori)
 
+    local free_chests = nil
+    local filled_chests = nil
+
     datapath = "logistic_data.csv"
     if fs.find(datapath)[1] == nil then
         free_chests = {}
