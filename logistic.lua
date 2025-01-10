@@ -65,7 +65,7 @@ function vector_to_str(vec,ori)
 end
 
 function save_data(data,path)
-    file = os.open(path,"w")
+    file = fs.open(path,"w")
     for k,v in pairs(data["free"]) do
         str_cont = "free,"..v["pos"]:tostring()..","..v["ori"]:tostring()
         file.write(str_cont)
@@ -82,7 +82,7 @@ function load_data(path)
     data["free"] = {}
     data["filled"] = {}
     free_cnt = 0
-    file = os.open(path,"r")
+    file = fs.open(path,"r")
     while true do
         line = file.readLine()
         ls = mysplit(line,",")
