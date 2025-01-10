@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V10")
+print("Logistic V11")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -109,26 +109,31 @@ function load_data(path)
 end
 
 function controller()
-    num_chests = 3
+    chests_up = 6
+    chests_for= 17
+    num_chests = chests_up*chests_for
     chest_cap = 27*64
     
-    storage_pos = vector.new(164,63,-46)
+    storage_pos = vector.new(169,63,-45)
     storage_ori = vector.new(0,0,1)
-    input_pos = vector.new(163,63,-46)
+    input_pos = vector.new(170,64,-46)
     input_ori = vector.new(-1,0,0)
     input_str = vector_to_str(input_pos,input_ori)
-    output_pos = vector.new(163,63,-48)
+    output_pos = vector.new(168,63,-45)
     output_ori = vector.new(-1,0,0)
     output_str = vector_to_str(output_pos,output_ori)
 
     datapath = "logistic_data.csv"
     if fs.find(datapath)[1] == nil then
         free_chests = {}
-        for i=1,num_chests do
-            free_chests[i] = {}
-            free_chests[i]["pos"] = storage_pos:add(vector.new(i-1,0,0))
-            free_chests[i]["ori"] = storage_ori
-            free_chests[i]["items"] = 0
+        for x=1,chests_for do
+            for y=1,chests_up do
+                i = y + ((x-1)*chests_up)
+                free_chests[i] = {}
+                free_chests[i]["pos"] = storage_pos:add(vector.new(x-1,0,0))
+                free_chests[i]["ori"] = storage_ori
+                free_chests[i]["items"] = 0
+            end
         end
         filled_chests = {}
         logistic_data = {}
