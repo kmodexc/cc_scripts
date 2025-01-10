@@ -190,7 +190,7 @@ function controller()
             print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
-            chest = logistic_data["filled"][it_name]
+            chest = logistic_data["filled"][item_name]
             if not chest then
                 print("Could not find",msg)
             elseif (chest["items"] - it_count) < 0 then
