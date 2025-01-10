@@ -125,10 +125,14 @@ function controller()
 end
 
 function terminal()
+    peripheral.find("modem", rednet.open)
     while true do
         io.write("Which element do you need? ")
         element = io.read()
-        print("Element is",element)
+        io.write("How many elements do you want? ")
+        count = io.read()
+        rednet.broadcast(element.." "..count,"logistic_request")
+        print("Logistic request send!")
     end
 end
 
