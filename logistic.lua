@@ -131,8 +131,9 @@ function terminal()
         element = io.read()
         io.write("How many elements do you want? ")
         count = io.read()
-        rednet.broadcast(element.." "..count,"logistic_request")
-        print("Logistic request send!")
+        msg = element.." "..count
+        rednet.broadcast(msg,"logistic_request")
+        print("Logistic request ("..msg..") send!")
     end
 end
 
