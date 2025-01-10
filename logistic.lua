@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V13")
+print("Logistic V14")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -143,8 +143,6 @@ function controller()
         save_data(logistic_data,datapath)
     else
         logistic_data = load_data(datapath)
-        filled_chests = data["filled"]
-        free_chests = data["free"]
     end
     
     peripheral.find("modem", rednet.open)
@@ -155,18 +153,18 @@ function controller()
             it_name = spl[1]
             it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            if not filled_chests[it_name] then
+            if not logistic_data["filled"][it_name] then
                 for i=1,num_chests do
-                    ch = free_chests[i]
+                    ch = logistic_data["free"][i]
                     if ch ~= nil then
-                        filled_chests[it_name] = ch
-                        table.remove(free_chests, i)
+                        logistic_data["filled"][it_name] = ch
+                        table.remove(logistic_data["free"], i)
                         print("found free chest",i)
                         break
                     end
                 end
             end
-            chest = filled_chests[it_name]
+            chest = logistic_data["free"][it_name]
             if not chest then
                 print("Could not process item. No free chest found!")
             elseif (chest["items"] + it_count) > chest_cap then
@@ -185,8 +183,6 @@ function controller()
                 print("send to chest",chest_str)
                 rednet.send(logistic_turtle_id, msg,"remote_control")
                 chest["items"] = chest["items"] + it_count
-                logistic_data["free"] = free_chests
-                logistic_data["filled"] = filled_chests
                 save_data(logistic_data,datapath)
             end
         elseif cid and prot == "logistic_request" then
@@ -194,7 +190,7 @@ function controller()
             print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
-            chest = filled_chests[it_name]
+            chest = logistic_data["filled"][it_name]
             if not chest then
                 print("Could not find",msg)
             elseif (chest["items"] - it_count) < 0 then
@@ -213,8 +209,6 @@ function controller()
                 print("get item")
                 rednet.send(logistic_turtle_id,msg,"remote_control")
                 chest["items"] = chest["items"] - it_count
-                logistic_data["free"] = free_chests
-                logistic_data["filled"] = filled_chests
                 save_data(logistic_data,datapath)                
             end
         end
