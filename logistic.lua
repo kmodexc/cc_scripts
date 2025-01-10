@@ -120,7 +120,7 @@ function controller()
             else
                 print("could not find",msg)
             end
-        then
+        end
     end
 end
 
