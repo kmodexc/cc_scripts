@@ -168,7 +168,7 @@ function controller()
             chest = filled_chests[it_name]
             if not chest then
                 print("Could not process item. No free chest found!")
-            elseif (chest["items"] + it_count) > chest_cap
+            elseif (chest["items"] + it_count) > chest_cap then
                 print("Cant put items as chest limit exceeded!")
             else
                 chest_str = vector_to_str(chest["pos"],chest["ori"])
@@ -196,7 +196,7 @@ function controller()
             chest = filled_chests[it_name]
             if not chest then
                 print("Could not find",msg)
-            elseif (chest["items"] - it_count) < 0
+            elseif (chest["items"] - it_count) < 0 then
                 print("Dont have enough items for",msg)
             else
                 chest_str = vector_to_str(chest["pos"],chest["ori"])
