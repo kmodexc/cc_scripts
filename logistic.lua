@@ -68,11 +68,11 @@ function save_data(data,path)
     file = fs.open(path,"w")
     for k,v in pairs(data["free"]) do
         str_cont = "free,"..v["pos"]:tostring()..","..v["ori"]:tostring()
-        file.write(str_cont)
+        file.writeLine(str_cont)
     end
     for k,v in pairs(data["filled"]) do
         str_cont = "filled,"..v["pos"]:tostring()..","..v["ori"]:tostring()..","..k..","..v["items"]
-        file.write(str_cont)
+        file.writeLine(str_cont)
     end
     file.close()
 end
