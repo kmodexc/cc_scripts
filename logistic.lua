@@ -74,7 +74,10 @@ function controller()
     input_str = vector_to_str(input_pos,input_ori)
     free_chests = {}
     for i=1,num_chests do
-        free_chests[i] = {"pos": storage_pos.add(vector.new(i-1,0,0)),"ori": storage_ori,"items": 0}
+        free_chests[i] = {}
+        free_chests[i]["pos"] = storage_pos.add(vector.new(i-1,0,0))
+        free_chests[i]["ori"] = storage_ori
+        free_chests[i]["items"] = 0
     end
     filled_chests = {}
     peripheral.find("modem", rednet.open)
