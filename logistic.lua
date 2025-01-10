@@ -13,8 +13,8 @@ function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
             collected_count = collected_count + iter_col
         end
     end
-    move_to_gps(x1,y1,z1)
-    set_dir_gps(dx1,dz1)
+    move_to_gps(x2,y2,z2)
+    set_dir_gps(dx2,dz2)
     for i=1,16 do
         turtle.select(i)
         turtle.drop()
