@@ -91,7 +91,7 @@ function controller()
             it_name = spl[1]
             it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            if filled_chests[it_name] == nil then
+            if not filled_chests[it_name] then
                 for i=1,num_chests do
                     ch = free_chests[i]
                     if ch ~= nil then
@@ -103,6 +103,9 @@ function controller()
                 end
             end
             chest = filled_chests[it_name]
+            if not chest then
+                print("Could not process item. No free chest found!")
+            end
             chest_str = vector_to_str(chest["pos"],chest["ori"])
             logistic_turtle_id = nil
             while not logistic_turtle_id do
