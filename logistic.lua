@@ -44,6 +44,63 @@ function pre_sorter()
     end
 end
 
+function mysplit(inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t = {}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
+function vector_to_str(vec,ori)
+    x = vec:dot(vector.new(1,0,0))
+    y = vec:dot(vector.new(0,1,0))
+    z = vec:dot(vector.new(0,0,1))
+    dx = ori:dot(vector.new(1,0,0))
+    dz = ori:dot(vector.new(0,0,1))
+    return ""..x.." "..y.." "..z.." "..dx.." "..dz
+end
+
+function controller()
+    num_chests = 3
+    chest_cap = 27*64
+    storage_pos = vector.new(164,63,-46)
+    storage_ori = vector.new(0,0,1)
+    input_pos = vector.new(163,63,-46)
+    input_ori = vector.new(-1,0,0)
+    input_str = vector_to_str(input_pos,input_ori)
+    free_chests = {}
+    for i=1,num_chests do
+        free_chests[i] = {"pos": storage_pos.add(vector.new(i-1,0,0)),"ori": storage_ori,"items": 0}
+    end
+    filled_chests = {}
+    peripheral.find("modem", rednet.open)
+    while true do
+        cid,msg,prot = rednet.receive("logistic_pre_sorter")
+        spl = mysplit(msg," ")
+        it_name = spl[1]
+        it_count = spl[2]
+        print("received",it_count,"items of",it_name)
+        if filled_chests[it_name] == nil then
+            for i=1,num_chests do
+                ch = free_chests[i]
+                if ch ~= nil then
+                    filled_chests[it_name] = ch
+                    break
+                end
+            end
+        end
+        chest = filled_chests[it_name]
+        chest_str = vector_to_str(chest["pos"],chest["ori"])
+        msg = "logistic move "..input_str.." "..chest_str.." "..it_count
+        print("send to chest",chest_str)
+        rednet.broadcast(msg,"remote_control")
+    end
+end
+
 function main()
     if arg[1] == "move" then
         arg_num = {}
@@ -56,6 +113,8 @@ function main()
         move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     elseif arg[1] == "presorter" then
         pre_sorter()
+    elseif arg[1] == "controller" then
+        controller()
     end
 end
 
