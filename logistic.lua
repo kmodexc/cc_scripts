@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V9")
+print("Logistic V10")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -85,6 +85,9 @@ function load_data(path)
     file = fs.open(path,"r")
     while true do
         line = file.readLine()
+        if line == nil then
+            break
+        end
         ls = mysplit(line,",")
         if ls[1] == "free" then
             obj = {}
