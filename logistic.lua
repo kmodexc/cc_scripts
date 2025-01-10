@@ -72,6 +72,9 @@ function controller()
     input_pos = vector.new(163,63,-46)
     input_ori = vector.new(-1,0,0)
     input_str = vector_to_str(input_pos,input_ori)
+    output_pos = vector.new(163,63,-48)
+    output_ori = vector.new(-1,0,0)
+    output_str = vector_to_str(output_pos,output_ori)
     free_chests = {}
     for i=1,num_chests do
         free_chests[i] = {}
@@ -82,25 +85,42 @@ function controller()
     filled_chests = {}
     peripheral.find("modem", rednet.open)
     while true do
-        cid,msg,prot = rednet.receive("logistic_pre_sorter")
-        spl = mysplit(msg," ")
-        it_name = spl[1]
-        it_count = spl[2]
-        print("received",it_count,"items of",it_name)
-        if filled_chests[it_name] == nil then
-            for i=1,num_chests do
-                ch = free_chests[i]
-                if ch ~= nil then
-                    filled_chests[it_name] = ch
-                    break
+        cid,msg,prot = rednet.receive("logistic_pre_sorter",1)
+        if cid then
+            spl = mysplit(msg," ")
+            it_name = spl[1]
+            it_count = spl[2]
+            print("received",it_count,"items of",it_name)
+            if filled_chests[it_name] == nil then
+                for i=1,num_chests do
+                    ch = free_chests[i]
+                    if ch ~= nil then
+                        filled_chests[it_name] = ch
+                        break
+                    end
                 end
             end
+            chest = filled_chests[it_name]
+            chest_str = vector_to_str(chest["pos"],chest["ori"])
+            msg = "logistic move "..input_str.." "..chest_str.." "..it_count
+            print("send to chest",chest_str)
+            rednet.broadcast(msg,"remote_control")
         end
-        chest = filled_chests[it_name]
-        chest_str = vector_to_str(chest["pos"],chest["ori"])
-        msg = "logistic move "..input_str.." "..chest_str.." "..it_count
-        print("send to chest",chest_str)
-        rednet.broadcast(msg,"remote_control")
+        cid,msg,prot = rednet.receive("logistic_request",1)
+        if cid then
+            msg_split = mysplit(msg," ")
+            item_name = "minecraft:"..msg_split[1]
+            it_count = to_number(msg_split[2])
+            chest = filled_chests[it_name]
+            if chest then
+                chest_str = vector_to_str(chest["pos"],chest["ori"])
+                msg = "logistic move "..chest_str.." "..output_str.." "..it_count
+                print("process request for ",msg)
+                rednet.broadcast(msg,"remote_control")
+            else
+                print("could not find",msg)
+            end
+        then
     end
 end
 
