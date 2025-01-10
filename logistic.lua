@@ -124,6 +124,14 @@ function controller()
     end
 end
 
+function terminal()
+    while true do
+        io.write("Which element do you need? ")
+        element = io.read()
+        print("Element is",element)
+    end
+end
+
 function main()
     if arg[1] == "move" then
         arg_num = {}
@@ -138,6 +146,8 @@ function main()
         pre_sorter()
     elseif arg[1] == "controller" then
         controller()
+    elseif arg[1] == "terminal" then
+        terminal()
     end
 end
 
