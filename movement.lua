@@ -171,7 +171,7 @@ function gps_to_local(x,y,z)
         --print("2 rot")
     end
 
-    return dx,dy,(dz + current_z)
+    return (dx + current_x),(dy + current_y),(dz + current_z)
 end
 
 function move_to_gps(x,y,z)
