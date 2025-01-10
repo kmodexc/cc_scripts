@@ -36,7 +36,7 @@ function pre_sorter()
             turtle.turnLeft()
             turtle.turnLeft()
             turtle.drop()
-            rednet.broadcast(item_name..item_count,protocol)
+            rednet.broadcast(item_name.." "..item_count,protocol)
             while chest_is_filled() do sleep(1) end
             turtle.turnLeft()
             turtle.turnLeft()
