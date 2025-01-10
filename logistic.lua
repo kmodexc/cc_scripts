@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V7")
+print("Logistic V8")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
