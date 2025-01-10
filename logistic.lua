@@ -65,6 +65,47 @@ function vector_to_str(vec,ori)
     return ""..x.." "..y.." "..z.." "..dx.." "..dz
 end
 
+function save_data(data,path)
+    file = os.open(path,"w")
+    for k,v in pairs(data["free"]) do
+        str_cont = "free,"..v["pos"]:tostring()..","..v["ori"]:tostring()
+        file.write(str_cont)
+    end
+    for k,v in pairs(data["filled"]) do
+        str_cont = "filled,"..v["pos"]:tostring()..","..v["ori"]:tostring()..","..k..","..v["items"]
+        file.write(str_cont)
+    end
+    file.close()
+end
+
+function load_data(path)
+    data = {}
+    data["free"] = {}
+    data["filled"] = {}
+    free_cnt = 0
+    file = os.open(path,"r")
+    while true do
+        line = file.readLine()
+        ls = mysplit(line,",")
+        if ls[1] == "free" then
+            obj = {}
+            obj["pos"] = vector.new(tonumber(ls[2]),tonumber(ls[3]),tonumber(ls[4]))
+            obj["ori"] = vector.new(tonumber(ls[5]),tonumber(ls[6]),tonumber(ls[7]))
+            obj["items"] = 0
+            data["free"][free_cnt] = obj
+            free_cnt = free_cnt + 1
+        elseif ls[1] == "filled" then
+            obj = {}
+            obj["pos"] = vector.new(tonumber(ls[2]),tonumber(ls[3]),tonumber(ls[4]))
+            obj["ori"] = vector.new(tonumber(ls[5]),tonumber(ls[6]),tonumber(ls[7]))
+            key = ls[8]
+            obj["items"] = tonumber(ls[9])
+            data["filled"][key] = obj
+        end
+    end
+    file.close()
+end
+
 function controller()
     num_chests = 3
     chest_cap = 27*64
@@ -78,7 +119,7 @@ function controller()
     output_ori = vector.new(-1,0,0)
     output_str = vector_to_str(output_pos,output_ori)
 
-    datapath = "logistic_data.json"
+    datapath = "logistic_data.csv"
     if fs.find(datapath)[1] == nil then
         free_chests = {}
         for i=1,num_chests do
@@ -91,12 +132,9 @@ function controller()
         logistic_data = {}
         logistic_data["free"] = free_chests
         logistic_data["filled"] = filled_chests
-        datastr = json.encode(logistic_data)
-        file = fs.open(datapath,"w")
-        file.write(datastr)
-        file.close()
+        save_data(logistic_data,datapath)
     else
-        data = json.decode(jsonFile(datapath))
+        load_data(datapath)
         filled_chests = data["filled"]
         logistic_data = data["free"]
     end
