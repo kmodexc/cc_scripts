@@ -96,6 +96,7 @@ function controller()
                     ch = free_chests[i]
                     if ch ~= nil then
                         filled_chests[it_name] = ch
+                        table.remove(free_chests, i)
                         break
                     end
                 end
