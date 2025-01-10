@@ -97,6 +97,7 @@ function controller()
                     if ch ~= nil then
                         filled_chests[it_name] = ch
                         table.remove(free_chests, i)
+                        print("found free chest",i)
                         break
                     end
                 end
