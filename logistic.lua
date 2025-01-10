@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V16")
+print("Logistic V17")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -113,7 +113,7 @@ function controller()
     chests_up = 6
     chests_for= 17
     num_chests = chests_up*chests_for
-    chest_cap = 27*64
+    chest_cap = 54*64
     
     storage_pos = vector.new(169,63,-45)
     storage_ori = vector.new(0,0,1)
