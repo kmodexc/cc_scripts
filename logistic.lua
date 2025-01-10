@@ -142,7 +142,7 @@ function controller()
         logistic_data["filled"] = filled_chests
         save_data(logistic_data,datapath)
     else
-        data = load_data(datapath)
+        logistic_data = load_data(datapath)
         filled_chests = data["filled"]
         free_chests = data["free"]
     end
