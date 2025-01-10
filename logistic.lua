@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V11")
+print("Logistic V12")
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -130,7 +130,7 @@ function controller()
             for y=1,chests_up do
                 i = y + ((x-1)*chests_up)
                 free_chests[i] = {}
-                free_chests[i]["pos"] = storage_pos:add(vector.new(x-1,0,0))
+                free_chests[i]["pos"] = storage_pos:add(vector.new(x-1,y-1,0))
                 free_chests[i]["ori"] = storage_ori
                 free_chests[i]["items"] = 0
             end
@@ -168,32 +168,45 @@ function controller()
             chest = filled_chests[it_name]
             if not chest then
                 print("Could not process item. No free chest found!")
-            end
-            chest_str = vector_to_str(chest["pos"],chest["ori"])
-            logistic_turtle_id = nil
-            while not logistic_turtle_id do
-                print("search for logistic turtles")
-                logistic_turtle_id = rednet.lookup("remote_control")
-                if not logistic_turtle_id then
-                    sleep()
+            elseif (chest["items"] + it_count) > chest_cap
+                print("Cant put items as chest limit exceeded!")
+            else
+                chest_str = vector_to_str(chest["pos"],chest["ori"])
+                logistic_turtle_id = nil
+                while not logistic_turtle_id do
+                    print("search for logistic turtles")
+                    logistic_turtle_id = rednet.lookup("remote_control")
+                    if not logistic_turtle_id then
+                        sleep()
+                    end
                 end
+                msg = "logistic move "..input_str.." "..chest_str.." "..it_count
+                print("send to chest",chest_str)
+                rednet.broadcast(msg,"remote_control")
+                chest["items"] = chest["items"] + it_count
+                logistic_data["free"] = free_chests
+                logistic_data["filled"] = filled_chests
+                save_data(logistic_data,datapath)
             end
-            msg = "logistic move "..input_str.." "..chest_str.." "..it_count
-            print("send to chest",chest_str)
-            rednet.broadcast(msg,"remote_control")
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
             chest = filled_chests[it_name]
-            if chest then
+            if not chest then
+                print("Could not find",msg)
+            elseif (chest["items"] - it_count) < 0
+                print("Dont have enough items for",msg)
+            else
                 chest_str = vector_to_str(chest["pos"],chest["ori"])
                 msg = "logistic move "..chest_str.." "..output_str.." "..it_count
                 print("get item")
                 rednet.broadcast(msg,"remote_control")
-            else
-                print("could not find",msg)
+                chest["items"] = chest["items"] - it_count
+                logistic_data["free"] = free_chests
+                logistic_data["filled"] = filled_chests
+                save_data(logistic_data,datapath)                
             end
         end
     end
