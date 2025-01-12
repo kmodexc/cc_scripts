@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V35")
+print("Logistic V36")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -426,6 +426,8 @@ function main()
         logistic_data = load_data(datapath)
         logistic_data = scan(logistic_data)
         save_data(logistic_data,datapath)
+    elseif arg[1] == "addstorage" then
+        addstorage()
     end
 end
 
