@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V38")
+print("Logistic V39")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
