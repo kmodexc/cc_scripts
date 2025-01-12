@@ -240,6 +240,7 @@ function controller()
     end
     
     peripheral.find("modem", rednet.open)
+    monitor = peripheral.find("modem")
     while true do
         cid,msg,prot = rednet.receive(nil,1)
         if cid and prot == "logistic_pre_sorter" then
@@ -251,6 +252,8 @@ function controller()
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
+            monitor.setCursorPos(1,1)
+            monitor.write(msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
             controller_logistic_request(logistic_data,item_name,it_count)
