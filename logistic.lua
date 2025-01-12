@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V40")
+print("Logistic V41")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -213,10 +213,10 @@ function count_item(logistic_data, item_name)
     return item_count
 end
 
-function controller_move_items_to(chest1,chest2)
-    chest1_str = vector_to_str(chest1["pos"],chest1["ori"])
-    chest2_str = vector_to_str(chest2["pos"],chest2["ori"])
-    logistic_turtle_id = nil
+function controller_move_items_to(chest1,chest2,item_count)
+    local chest1_str = vector_to_str(chest1["pos"],chest1["ori"])
+    local chest2_str = vector_to_str(chest2["pos"],chest2["ori"])
+    local logistic_turtle_id = nil
     while not logistic_turtle_id do
         print("search for logistic turtles")
         logistic_turtle_id = rednet.lookup("remote_control")
@@ -224,7 +224,7 @@ function controller_move_items_to(chest1,chest2)
             --coroutine.yield()
         end
     end
-    msg = "logistic move "..chest1_str.." "..chest2_str.." "..it_count
+    local msg = "logistic move "..chest1_str.." "..chest2_str.." "..item_count
     print("send items from chest",chest1_str,"to chest",chest2_str)
     rednet.send(logistic_turtle_id, msg,"remote_control")
 end
@@ -245,7 +245,7 @@ function controller_logistic_request(item_name,item_count)
         controller_logistic_request(logistic_data,item_name,item_count - first_batch_item_count)
         return
     else
-        controller_move_items_to(chest,output_chest)
+        controller_move_items_to(chest,output_chest,item_count)
         chest["items"] = chest["items"] - item_count
         if chest["items"] == 0 then
             table.remove(logistic_data["filled"][item_name],#logistic_data["filled"][item_name])
@@ -284,7 +284,7 @@ function controller_presorter_insert(item_name,item_count)
     elseif (chest["items"] + item_count) > chest_cap then
         print("Cant put items as chest limit exceeded! (or no free chests)")
     else
-        controller_move_items_to(input_chest,chest)
+        controller_move_items_to(input_chest,chest,item_count)
         chest["items"] = chest["items"] + item_count
         save_data(logistic_data,datapath)
     end
