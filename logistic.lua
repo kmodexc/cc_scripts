@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V20")
+print("Logistic V21")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -151,7 +151,7 @@ function controller_move_items_to(chest1,chest2)
         print("search for logistic turtles")
         logistic_turtle_id = rednet.lookup("remote_control")
         if not logistic_turtle_id then
-            coroutine.yield()
+            --coroutine.yield()
         end
     end
     msg = "logistic move "..chest1_str.." "..chest2_str.." "..it_count
