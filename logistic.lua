@@ -307,7 +307,7 @@ function write_monitor(msg,line)
 end
 
 function controller()
-    local num_chests = 0
+    num_chests = 0
     local queue_request = List.new()
     local queue_sorter = List.new()
 
