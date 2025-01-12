@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V28")
+print("Logistic V29")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -192,7 +192,7 @@ function controller_presorter_insert(logistic_data,item_name,item_count)
         for i=1,num_chests do
             ch = logistic_data["free"][i]
             if ch ~= nil then
-                logistic_data["filled"][item_name] = ch
+                table.insert(logistic_data["filled"][item_name],ch)
                 table.remove(logistic_data["free"], i)
                 print("found free chest",i)
                 chest = ch
