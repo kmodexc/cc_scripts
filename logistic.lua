@@ -163,7 +163,7 @@ function controller_logistic_request(logistic_data,item_name,item_count)
     chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
     if not chest then
         print("Could not find",item_name)
-        monitor_write("Could not find "..item_name)
+        write_monitor("Could not find "..item_name)
     elseif (chest["items"] - item_count) < 0 then
         --print("Dont have enough items for",msg)
         first_batch_item_count = chest["items"]
