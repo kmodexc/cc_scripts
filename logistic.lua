@@ -337,6 +337,8 @@ function main()
         controller()
     elseif arg[1] == "terminal" then
         terminal()
+    elseif arg[1] == "scan" then
+        scan()
     end
 end
 
