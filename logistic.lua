@@ -5,7 +5,7 @@ print("Logistic V38")
 chest_cap = 54*64
 datapath = "logistic_data.csv"
 input_chest = {}
-input_chest["pos"] = vector.new(170,64,-46)
+input_chest["pos"] = vector.new(169,64,-45)
 input_chest["ori"] = vector.new(-1,0,0)
 output_chest = {}
 output_chest["pos"] = vector.new(168,63,-45)
