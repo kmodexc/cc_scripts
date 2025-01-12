@@ -159,8 +159,9 @@ function controller_move_items_to(chest1,chest2)
     rednet.send(logistic_turtle_id, msg,"remote_control")
 end
 
-function controller_logistic_request(logistic_data,item_name,item_count)
+function controller_logistic_request(item_name,item_count)
     local chest = nil
+    local logistic_data = load_data(datapath)
     if logistic_data["filled"][item_name] then
         chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
     end
@@ -169,7 +170,7 @@ function controller_logistic_request(logistic_data,item_name,item_count)
         write_monitor("Could not find "..item_name)
     elseif (chest["items"] - item_count) < 0 then
         --print("Dont have enough items for",msg)
-        first_batch_item_count = chest["items"]
+        local first_batch_item_count = chest["items"]
         controller_logistic_request(logistic_data,item_name,first_batch_item_count)
         controller_logistic_request(logistic_data,item_name,item_count - first_batch_item_count)
         return
@@ -184,8 +185,9 @@ function controller_logistic_request(logistic_data,item_name,item_count)
     end
 end
 
-function controller_presorter_insert(logistic_data,item_name,item_count)
+function controller_presorter_insert(item_name,item_count)
     local chest = nil
+    local logistic_data = load_data(datapath)
     if logistic_data["filled"][item_name] then
         chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
         if (chest["items"] + item_count) > chest_cap then
@@ -194,7 +196,7 @@ function controller_presorter_insert(logistic_data,item_name,item_count)
     end
     if not chest then
         for i=1,num_chests do
-            ch = logistic_data["free"][i]
+            local ch = logistic_data["free"][i]
             if ch ~= nil then
                 if not logistic_data["filled"][item_name] then
                     logistic_data["filled"][item_name] = {}
@@ -242,7 +244,7 @@ function controller()
     if fs.find(datapath)[1] == nil then
         error("could not find logistic_file.csv")
     else
-        logistic_data = load_data(datapath)
+        local logistic_data = load_data(datapath)
         for k1,v1 in pairs(logistic_data["free"]) do
             num_chests = num_chests + 1
         end
@@ -261,14 +263,14 @@ function controller()
             it_name = spl[1]
             it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            controller_presorter_insert(logistic_data,it_name,it_count)
+            controller_presorter_insert(it_name,it_count)
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
             write_monitor(msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
-            controller_logistic_request(logistic_data,item_name,it_count)
+            controller_logistic_request(item_name,it_count)
         end
     end
 end
