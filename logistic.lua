@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V33")
+print("Logistic V34")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -62,6 +62,7 @@ function addstorage()
     print("Direction of chests? ")
     chdirx = tonumber(io.read())
     chdirz = tonumber(io.read())
+    free_chests = {}
     for x=1,numxz do
         for y=1,numy do
             local x = (startx+(dirx*(x-1)))
@@ -74,8 +75,17 @@ function addstorage()
             if not findchest(pos,ori) then
                 line = "free,"..x..","..y..","..z..","..chdirx..",0,"..chdirz
                 print(line)
+                table.insert(free_chests,chest)
             end
         end
+    end
+    print("Do you want to add these chests?")
+    if io.read() == "y" then
+        local logistic_data = load_data(datapath)
+        for k,v in pairs(free_chests):
+            table.insert(logistic_data["free"],v)
+        end
+        save_data(logistic_data,datapath)
     end
 end
 
