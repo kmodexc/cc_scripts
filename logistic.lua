@@ -214,6 +214,16 @@ function controller_presorter_insert(logistic_data,item_name,item_count)
     end
 end
 
+function coroutine_continue_next(queue)
+    co = List.popright(queue)
+    if co ~= nil then
+        if co.continue() then
+            List.pushleft(queue,co)
+        end
+    end
+    return co
+end
+
 function controller()
     num_chests = 0
     queue_request = List.new()
@@ -241,22 +251,17 @@ function controller()
             it_name = spl[1]
             it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            queue_sorter:pushleft(controller_presorter_insert(logistic_data,it_name,it_count))
+            List.pushleft(queue_sorter,controller_presorter_insert(logistic_data,it_name,it_count))
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
-            queue_request:pushleft(controller_logistic_request(logistic_data,item_name,it_count))
+            List.pushleft(queue_request,controller_logistic_request(logistic_data,item_name,it_count))
         else
-            co = queue_request:popright()
+            co = coroutine_continue_next(queue_request)
             if co == nil then
-                co = queue_sorter:popright()
-            end
-            if co ~= nil then
-                if co.continue() then
-                    queue_request:pushleft(co)
-                end
+                coroutine_continue_next(queue_sorter)
             end
         end
     end
