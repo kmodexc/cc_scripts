@@ -162,7 +162,8 @@ end
 function controller_logistic_request(logistic_data,item_name,item_count)
     chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
     if not chest then
-        print("Could not find",msg)
+        print("Could not find",item_name)
+        monitor_write("Could not find "..item_name)
     elseif (chest["items"] - item_count) < 0 then
         --print("Dont have enough items for",msg)
         first_batch_item_count = chest["items"]
@@ -220,6 +221,12 @@ function coroutine_continue_next(queue)
     return co
 end
 
+function write_monitor(msg)
+    monitor = peripheral.find("monitor")
+    monitor.setCursorPos(1,1)
+    monitor.write(msg)
+end
+
 function controller()
     num_chests = 0
     queue_request = List.new()
@@ -240,7 +247,6 @@ function controller()
     end
     
     peripheral.find("modem", rednet.open)
-    monitor = peripheral.find("modem")
     while true do
         cid,msg,prot = rednet.receive(nil,1)
         if cid and prot == "logistic_pre_sorter" then
@@ -252,8 +258,7 @@ function controller()
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
-            monitor.setCursorPos(1,1)
-            monitor.write(msg)
+            write_monitor(msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
             controller_logistic_request(logistic_data,item_name,it_count)
