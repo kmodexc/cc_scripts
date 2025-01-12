@@ -311,7 +311,7 @@ function scan(logistic_data)
                     new_logistic_data["filled"][item_name] = {}
                 end
                 table.insert(new_logistic_data["filled"][item_name],v2)
-                new_logistic_data["filled"][item_name][k2]["items"] = item_count
+                v2["items"] = item_count
             end
         end
     end
