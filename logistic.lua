@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V37")
+print("Logistic V38")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -73,7 +73,7 @@ function addstorage()
             chest["pos"] = vector.new(x,y,z)
             chest["ori"] = vector.new(chdirx,0,chdirz)
             chest["items"] = 0
-            if not findchest(pos,ori) then
+            if not findchest(chest["pos"],chest["ori"]) then
                 line = "free,"..x..","..y..","..z..","..chdirx..",0,"..chdirz
                 print(line)
                 table.insert(free_chests,chest)
