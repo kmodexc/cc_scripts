@@ -202,6 +202,17 @@ function load_data(path)
     return data
 end
 
+function count_item(logistic_data, item_name)
+    if logistic_data["filled"][item_name] == nil then
+        return 0
+    end
+    item_count = 0
+    for k1,v1 in pairs(logistic_data["filled"][item_name]) do
+        item_count = item_count + v1["items"]
+    end
+    return item_count
+end
+
 function controller_move_items_to(chest1,chest2)
     chest1_str = vector_to_str(chest1["pos"],chest1["ori"])
     chest2_str = vector_to_str(chest2["pos"],chest2["ori"])
@@ -226,7 +237,7 @@ function controller_logistic_request(item_name,item_count)
     end
     if not chest then
         print("Could not find",item_name)
-        write_monitor("Could not find "..item_name)
+        write_monitor("Could not find "..item_name,3)
     elseif (chest["items"] - item_count) < 0 then
         --print("Dont have enough items for",msg)
         local first_batch_item_count = chest["items"]
@@ -289,16 +300,16 @@ function coroutine_continue_next(queue)
     return co
 end
 
-function write_monitor(msg)
+function write_monitor(msg,line)
     monitor = peripheral.find("monitor")
-    monitor.setCursorPos(1,1)
+    monitor.setCursorPos(1,line)
     monitor.write(msg)
 end
 
 function controller()
-    num_chests = 0
-    queue_request = List.new()
-    queue_sorter = List.new()
+    local num_chests = 0
+    local queue_request = List.new()
+    local queue_sorter = List.new()
 
     if fs.find(datapath)[1] == nil then
         error("could not find logistic_file.csv")
@@ -316,38 +327,39 @@ function controller()
     
     peripheral.find("modem", rednet.open)
     while true do
-        cid,msg,prot = rednet.receive(nil,1)
+        local cid,msg,prot = rednet.receive(nil,1)
         if cid and prot == "logistic_pre_sorter" then
-            spl = mysplit(msg," ")
-            it_name = spl[1]
-            it_count = spl[2]
+            local spl = mysplit(msg," ")
+            local it_name = spl[1]
+            local it_count = spl[2]
             print("received",it_count,"items of",it_name)
             controller_presorter_insert(it_name,it_count)
         elseif cid and prot == "logistic_request" then
-            msg_split = mysplit(msg," ")
+            local msg_split = mysplit(msg," ")
             print("process request for",msg)
-            write_monitor(msg)
-            item_name = "minecraft:"..msg_split[1]
-            it_count = tonumber(msg_split[2])
+            write_monitor(msg,1)
+            write_monitor("have in total "..count_item(load_data(datapath),it_name),2)
+            local item_name = "minecraft:"..msg_split[1]
+            local it_count = tonumber(msg_split[2])
             controller_logistic_request(item_name,it_count)
         end
     end
 end
 
 function vector_to_single(vec)
-    x = vec:dot(vector.new(1,0,0))
-    y = vec:dot(vector.new(0,1,0))
-    z = vec:dot(vector.new(0,0,1))
+    local x = vec:dot(vector.new(1,0,0))
+    local y = vec:dot(vector.new(0,1,0))
+    local z = vec:dot(vector.new(0,0,1))
     return x,y,z
 end
 
 function scan_chest(chest)
     move_to_gps(vector_to_single(chest["pos"]))
-    x,y,z = vector_to_single(chest["ori"])
+    local x,y,z = vector_to_single(chest["ori"])
     set_dir_gps(x,z)
-    items = peripheral.call("front", "list")
-    item_name = nil
-    item_count = 0
+    local items = peripheral.call("front", "list")
+    local item_name = nil
+    local item_count = 0
     for k,v in pairs(items) do
         if item_name == nil then
             item_name = v["name"]
