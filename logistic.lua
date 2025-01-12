@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V22")
+print("Logistic V23")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -256,6 +256,56 @@ function controller()
             controller_logistic_request(logistic_data,item_name,it_count)
         end
     end
+end
+
+function vector_to_single(vec)
+    x = vec:dot(vector.new(1,0,0))
+    y = vec:dot(vector.new(0,1,0))
+    z = vec:dot(vector.new(0,0,1))
+    return x,y,z
+end
+
+function scan_chest(chest)
+    move_to_gps(vector_to_single(chest["pos"]))
+    set_dir_gps(vector_to_single(chest["ori"]))
+    items = peripheral.call("front", "list")
+    item_name = nil
+    item_count = 0
+    for k,v in pairs(items) do
+        if item_name == nil then
+            item_name = v["name"]
+        else
+            if item_name ~= v["name"] then
+                print("chest has mutliple items",chest["pos"]:tostring())
+                return nil,0
+            end
+        end
+        item_count = item_count + v["count"]
+    end
+    return item_name, item_count
+end
+
+function scan()
+    logistic_data = load_data(datapath)
+    for k1,v1 in pairs(logistic_data["free"]) do
+        item_name,item_count = scan_chest(v1)
+        if item_name ~= nil then
+            table.remove(logistic_data["free"],k1)
+            table.insert(logistic_data["filled"][item_name],v1)
+        end
+    end
+    for k1,v1 in pairs(logistic_data["filled"]) do
+        for k2,v2 in pairs(v1) do 
+            item_name,item_count = scan_chest(v2)
+            if item_name == nil then
+                table.remove(logistic_data[k1],k2)
+                table.insert(logistic_data["free"],v2)
+            else
+                logistic_data[k1][k2]["items"] = item_count
+            end
+        end
+    end
+    save_data(logistic_data,datapath)
 end
 
 function terminal()
