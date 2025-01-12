@@ -259,8 +259,7 @@ function controller()
             it_count = tonumber(msg_split[2])
             List.pushleft(queue_request,controller_logistic_request(logistic_data,item_name,it_count))
         else
-            co = coroutine_continue_next(queue_request)
-            if co == nil then
+            if coroutine_continue_next(queue_request) == nil then
                 coroutine_continue_next(queue_sorter)
             end
         end
