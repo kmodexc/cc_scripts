@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V36")
+print("Logistic V37")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -51,6 +51,7 @@ end
 function addstorage()
     print("Which position to start? ")
     startx = tonumber(io.read())
+    starty = tonumber(io.read())
     startz = tonumber(io.read())
     print("Which direction? ")
     dirx = tonumber(io.read())
