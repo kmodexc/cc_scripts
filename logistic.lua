@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V27")
+print("Logistic V28")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -287,33 +287,35 @@ function scan_chest(chest)
 end
 
 function scan(logistic_data)
+    new_logistic_data = {}
+    new_logistic_data["filled"] = {}
+    new_logistic_data["free"] = {}
     for k1,v1 in pairs(logistic_data["free"]) do
         item_name,item_count = scan_chest(v1)
         if item_name ~= nil then
-            table.remove(logistic_data["free"],k1)
-            if logistic_data["filled"][item_name] == nil then
-                logistic_data["filled"][item_name] = {}
+            if new_logistic_data["filled"][item_name] == nil then
+                new_logistic_data["filled"][item_name] = {}
             end
-            table.insert(logistic_data["filled"][item_name],v1)
+            table.insert(new_logistic_data["filled"][item_name],v1)
+        else
+            table.insert(new_logistic_data["free"],v1)
         end
     end
     for k1,v1 in pairs(logistic_data["filled"]) do
         for k2,v2 in pairs(v1) do 
             item_name,item_count = scan_chest(v2)
             if item_name == nil then
-                table.remove(logistic_data["filled"][k1],k2)
-                table.insert(logistic_data["free"],v2)
-            elseif item_name ~= k1 then
-                table.remove(logistic_data["filled"][k1],k2)
-                if logistic_data["filled"][item_name] == nil then
-                    logistic_data["filled"][item_name] = {}
-                end
-                table.insert(logistic_data["filled"][item_name],v2)
+                table.insert(new_logistic_data["free"],v2)
             else
-                logistic_data["filled"][item_name][k2]["items"] = item_count
+                if new_logistic_data["filled"][item_name] == nil then
+                    new_logistic_data["filled"][item_name] = {}
+                end
+                table.insert(new_logistic_data["filled"][item_name],v2)
+                new_logistic_data["filled"][item_name][k2]["items"] = item_count
             end
         end
     end
+    return new_logistic_data
 end
 
 function terminal()
@@ -347,7 +349,7 @@ function main()
         terminal()
     elseif arg[1] == "scan" then
         logistic_data = load_data(datapath)
-        scan(logistic_data)
+        logistic_data = scan(logistic_data)
         save_data(logistic_data,datapath)
     end
 end
