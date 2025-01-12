@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V32")
+print("Logistic V33")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -29,6 +29,54 @@ function List.popright (list)
     list[last] = nil         -- to allow garbage collection
     list.last = last - 1
     return value
+end
+
+function findchest(pos,ori)
+    local logistic_data = load_data(datapath)
+    for k1,v1 in pairs(logistic_data["free"]) do
+        if v1["pos"]:equals(pos) and v1["ori"]:equals(ori) then
+            return v1
+        end
+    end
+    for k1,v1 in pairs(logistic_data["filled"]) do
+        for k2,v2 in pairs(v1) do 
+            if v2["pos"]:equals(pos) and v2["ori"]:equals(ori) then
+                return v2
+            end
+        end
+    end
+    return nil
+end
+
+function addstorage()
+    print("Which position to start? ")
+    startx = tonumber(io.read())
+    startz = tonumber(io.read())
+    print("Which direction? ")
+    dirx = tonumber(io.read())
+    dirz = tonumber(io.read())
+    print("Number of chests in x-z dir? ")
+    numxz = tonumber(io.read())
+    print("Number of chests in y dir? ")
+    numy = tonumber(io.read())
+    print("Direction of chests? ")
+    chdirx = tonumber(io.read())
+    chdirz = tonumber(io.read())
+    for x=1,numxz do
+        for y=1,numy do
+            local x = (startx+(dirx*(x-1)))
+            local y = (starty+(y-1))
+            local z = (startz+(dirz*(x-1)))
+            local chest = {}
+            chest["pos"] = vector.new(x,y,z)
+            chest["ori"] = vector.new(chdirx,0,chdirz)
+            chest["items"] = 0
+            if not findchest(pos,ori) then
+                line = "free,"..x..","..y..","..z..","..chdirx..",0,"..chdirz
+                print(line)
+            end
+        end
+    end
 end
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
