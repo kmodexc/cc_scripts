@@ -298,7 +298,7 @@ function scan()
     for k1,v1 in pairs(logistic_data["filled"]) do
         for k2,v2 in pairs(v1) do 
             item_name,item_count = scan_chest(v2)
-            if item_name == nil then
+            if item_name == nil or item_name ~= k1 then
                 table.remove(logistic_data["filled"][k1],k2)
                 table.insert(logistic_data["free"],v2)
             else
