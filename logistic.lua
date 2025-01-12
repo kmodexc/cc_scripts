@@ -101,7 +101,7 @@ function save_data(data,path)
     end
     for _k,_v in pairs(data["filled"]) do
         for k,v in pairs(_v) do
-            str_cont = "filled,"..v["pos"]:tostring()..","..v["ori"]:tostring()..","..k..","..v["items"]
+            str_cont = "filled,"..v["pos"]:tostring()..","..v["ori"]:tostring()..",".._k..","..v["items"]
             file.writeLine(str_cont)
         end
     end
