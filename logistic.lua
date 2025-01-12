@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V42")
+print("Logistic V43")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -338,9 +338,9 @@ function controller()
             local msg_split = mysplit(msg," ")
             print("process request for",msg)
             write_monitor(msg,1)
-            write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..it_name),2)
             local item_name = "minecraft:"..msg_split[1]
             local it_count = tonumber(msg_split[2])
+            write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
             controller_logistic_request(item_name,it_count)
         end
     end
