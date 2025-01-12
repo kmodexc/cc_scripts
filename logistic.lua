@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V26")
+print("Logistic V27")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -292,6 +292,9 @@ function scan()
         item_name,item_count = scan_chest(v1)
         if item_name ~= nil then
             table.remove(logistic_data["free"],k1)
+            if logistic_data["filled"][item_name] == nil then
+                logistic_data["filled"][item_name] = {}
+            end
             table.insert(logistic_data["filled"][item_name],v1)
         end
     end
@@ -303,6 +306,9 @@ function scan()
                 table.insert(logistic_data["free"],v2)
             elseif item_name ~= k1 then
                 table.remove(logistic_data["filled"][k1],k2)
+                if logistic_data["filled"][item_name] == nil then
+                    logistic_data["filled"][item_name] = {}
+                end
                 table.insert(logistic_data["filled"][item_name],v2)
             else
                 logistic_data["filled"][item_name][k2]["items"] = item_count
