@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V34")
+print("Logistic V35")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -236,7 +236,7 @@ function controller_logistic_request(item_name,item_count)
         controller_move_items_to(chest,output_chest)
         chest["items"] = chest["items"] - item_count
         if chest["items"] == 0 then
-            logistic_data["filled"][item_name] = nil
+            table.remove(logistic_data["filled"][item_name],#logistic_data["filled"][item_name])
             table.insert(logistic_data["free"],chest)
         end
         save_data(logistic_data,datapath)
