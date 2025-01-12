@@ -286,8 +286,7 @@ function scan_chest(chest)
     return item_name, item_count
 end
 
-function scan()
-    logistic_data = load_data(datapath)
+function scan(logistic_data)
     for k1,v1 in pairs(logistic_data["free"]) do
         item_name,item_count = scan_chest(v1)
         if item_name ~= nil then
@@ -315,7 +314,6 @@ function scan()
             end
         end
     end
-    save_data(logistic_data,datapath)
 end
 
 function terminal()
@@ -348,7 +346,9 @@ function main()
     elseif arg[1] == "terminal" then
         terminal()
     elseif arg[1] == "scan" then
-        scan()
+        logistic_data = load_data(datapath)
+        scan(logistic_data)
+        save_data(logistic_data,datapath)
     end
 end
 
