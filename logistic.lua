@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V25")
+print("Logistic V26")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -298,11 +298,14 @@ function scan()
     for k1,v1 in pairs(logistic_data["filled"]) do
         for k2,v2 in pairs(v1) do 
             item_name,item_count = scan_chest(v2)
-            if item_name == nil or item_name ~= k1 then
+            if item_name == nil then
                 table.remove(logistic_data["filled"][k1],k2)
                 table.insert(logistic_data["free"],v2)
+            elseif item_name ~= k1:
+                table.remove(logistic_data["filled"][k1],k2)
+                table.insert(logistic_data["filled"][item_name],v2)
             else
-                logistic_data["filled"][k1][k2]["items"] = item_count
+                logistic_data["filled"][item_name][k2]["items"] = item_count
             end
         end
     end
