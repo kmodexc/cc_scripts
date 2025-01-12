@@ -301,7 +301,7 @@ function scan()
             if item_name == nil then
                 table.remove(logistic_data["filled"][k1],k2)
                 table.insert(logistic_data["free"],v2)
-            elseif item_name ~= k1:
+            elseif item_name ~= k1 then
                 table.remove(logistic_data["filled"][k1],k2)
                 table.insert(logistic_data["filled"][item_name],v2)
             else
