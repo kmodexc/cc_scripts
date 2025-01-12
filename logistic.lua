@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V23")
+print("Logistic V24")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -267,7 +267,8 @@ end
 
 function scan_chest(chest)
     move_to_gps(vector_to_single(chest["pos"]))
-    set_dir_gps(vector_to_single(chest["ori"]))
+    x,y,z = vector_to_single(chest["ori"])
+    set_dir_gps(x,z)
     items = peripheral.call("front", "list")
     item_name = nil
     item_count = 0
