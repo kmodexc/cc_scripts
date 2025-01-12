@@ -1,12 +1,12 @@
 require("movement")
 
-print("Logistic V39")
+print("Logistic V40")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
 input_chest = {}
 input_chest["pos"] = vector.new(169,64,-45)
-input_chest["ori"] = vector.new(-1,0,0)
+input_chest["ori"] = vector.new(0,0,-1)
 output_chest = {}
 output_chest["pos"] = vector.new(168,63,-45)
 output_chest["ori"] = vector.new(-1,0,0)
