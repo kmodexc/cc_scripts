@@ -82,7 +82,7 @@ function addstorage()
     print("Do you want to add these chests?")
     if io.read() == "y" then
         local logistic_data = load_data(datapath)
-        for k,v in pairs(free_chests):
+        for k,v in pairs(free_chests) then
             table.insert(logistic_data["free"],v)
         end
         save_data(logistic_data,datapath)
