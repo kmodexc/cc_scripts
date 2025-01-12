@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V21")
+print("Logistic V22")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -170,15 +170,13 @@ function controller_logistic_request(logistic_data,item_name,item_count)
         controller_logistic_request(logistic_data,item_name,item_count - first_batch_item_count)
         return
     else
-        return coroutine.create(function ()
-            controller_move_items_to(chest,output_chest)
-            chest["items"] = chest["items"] - item_count
-            if chest["items"] == 0 then
-                logistic_data["filled"][item_name] = nil
-                table.insert(logistic_data["free"],chest)
-            end
-            save_data(logistic_data,datapath)
-        end)
+        controller_move_items_to(chest,output_chest)
+        chest["items"] = chest["items"] - item_count
+        if chest["items"] == 0 then
+            logistic_data["filled"][item_name] = nil
+            table.insert(logistic_data["free"],chest)
+        end
+        save_data(logistic_data,datapath)
     end
 end
 
@@ -206,11 +204,9 @@ function controller_presorter_insert(logistic_data,item_name,item_count)
     elseif (chest["items"] + item_count) > chest_cap then
         print("Cant put items as chest limit exceeded! (or no free chests)")
     else
-        return coroutine.create(function () 
-            controller_move_items_to(input_chest,chest)
-            chest["items"] = chest["items"] + item_count
-            save_data(logistic_data,datapath)
-        end)
+        controller_move_items_to(input_chest,chest)
+        chest["items"] = chest["items"] + item_count
+        save_data(logistic_data,datapath)
     end
 end
 
@@ -251,17 +247,13 @@ function controller()
             it_name = spl[1]
             it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            List.pushleft(queue_sorter,controller_presorter_insert(logistic_data,it_name,it_count))
+            controller_presorter_insert(logistic_data,it_name,it_count)
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
-            List.pushleft(queue_request,controller_logistic_request(logistic_data,item_name,it_count))
-        else
-            if coroutine_continue_next(queue_request) == nil then
-                coroutine_continue_next(queue_sorter)
-            end
+            controller_logistic_request(logistic_data,item_name,it_count)
         end
     end
 end
