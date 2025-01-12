@@ -245,7 +245,7 @@ function controller()
     
     peripheral.find("modem", rednet.open)
     while true do
-        cid,msg,prot = rednet.receive()
+        cid,msg,prot = rednet.receive(nil,1)
         if cid and prot == "logistic_pre_sorter" then
             spl = mysplit(msg," ")
             it_name = spl[1]
