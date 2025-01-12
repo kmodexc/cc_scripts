@@ -217,7 +217,7 @@ end
 function coroutine_continue_next(queue)
     co = List.popright(queue)
     if co ~= nil then
-        if co:continue() then
+        if coroutine.resume(co) then
             List.pushleft(queue,co)
         end
     end
