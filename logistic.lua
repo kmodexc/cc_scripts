@@ -1,6 +1,6 @@
 require("movement")
 
-print("Logistic V30")
+print("Logistic V31")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -160,7 +160,10 @@ function controller_move_items_to(chest1,chest2)
 end
 
 function controller_logistic_request(logistic_data,item_name,item_count)
-    chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
+    local chest = nil
+    if logistic_data["filled"][item_name] then
+        chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
+    end
     if not chest then
         print("Could not find",item_name)
         write_monitor("Could not find "..item_name)
