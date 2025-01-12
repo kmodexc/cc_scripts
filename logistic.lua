@@ -192,6 +192,9 @@ function controller_presorter_insert(logistic_data,item_name,item_count)
         for i=1,num_chests do
             ch = logistic_data["free"][i]
             if ch ~= nil then
+                if not logistic_data["filled"][item_name] then
+                    logistic_data["filled"][item_name] = {}
+                end
                 table.insert(logistic_data["filled"][item_name],ch)
                 table.remove(logistic_data["free"], i)
                 print("found free chest",i)
