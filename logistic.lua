@@ -302,7 +302,7 @@ function scan()
                 table.remove(logistic_data[k1],k2)
                 table.insert(logistic_data["free"],v2)
             else
-                logistic_data[k1][k2]["items"] = item_count
+                logistic_data["filled"][k1][k2]["items"] = item_count
             end
         end
     end
