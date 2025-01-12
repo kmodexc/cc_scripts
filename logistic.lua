@@ -227,7 +227,7 @@ function controller()
             num_chests = num_chests + 1
         end
         for k1,v1 in pairs(logistic_data["filled"]) do
-            for k2,v2 in pairs(v) do 
+            for k2,v2 in pairs(v1) do 
                 num_chests = num_chests + 1
             end
         end
