@@ -215,7 +215,7 @@ function controller_presorter_insert(logistic_data,item_name,item_count)
 end
 
 function coroutine_continue_next(queue)
-    co = List.popright(queue)
+    local co = List.popright(queue)
     if co ~= nil then
         if coroutine.resume(co) then
             List.pushleft(queue,co)
