@@ -1,6 +1,35 @@
 require("movement")
 
-print("Logistic V17")
+print("Logistic V18")
+
+chest_cap = 54*64
+datapath = "logistic_data.csv"
+input_chest = {}
+input_chest["pos"] = vector.new(170,64,-46)
+input_chest["ori"] = vector.new(-1,0,0)
+output_chest = {}
+output_chest["pos"] = vector.new(168,63,-45)
+output_chest["ori"] = vector.new(-1,0,0)
+
+List = {}
+function List.new ()
+    return {first = 0, last = -1}
+end
+function List.pushleft (list, value)
+    local first = list.first - 1
+    list.first = first
+    list[first] = value
+end
+function List.popright (list)
+    local last = list.last
+    if list.first > last then 
+        return nil
+    end
+    local value = list[last]
+    list[last] = nil         -- to allow garbage collection
+    list.last = last - 1
+    return value
+end
 
 function move_items_to(x1,y1,z1,dx1,dz1,x2,y2,z2,dx2,dz2,num_items)
     print("Get",num_items)
@@ -70,9 +99,11 @@ function save_data(data,path)
         str_cont = "free,"..v["pos"]:tostring()..","..v["ori"]:tostring()
         file.writeLine(str_cont)
     end
-    for k,v in pairs(data["filled"]) do
-        str_cont = "filled,"..v["pos"]:tostring()..","..v["ori"]:tostring()..","..k..","..v["items"]
-        file.writeLine(str_cont)
+    for _k,_v in pairs(data["filled"]) do
+        for k,v in pairs(_v) do
+            str_cont = "filled,"..v["pos"]:tostring()..","..v["ori"]:tostring()..","..k..","..v["items"]
+            file.writeLine(str_cont)
+        end
     end
     file.close()
 end
@@ -102,47 +133,104 @@ function load_data(path)
             obj["ori"] = vector.new(tonumber(ls[5]),tonumber(ls[6]),tonumber(ls[7]))
             key = ls[8]
             obj["items"] = tonumber(ls[9])
-            data["filled"][key] = obj
+            if data["filled"][key] == nil then
+                data["filled"][key] = {}
+            end
+            data["filled"][key][#data["filled"][key]+1] = obj
         end
     end
     file.close()
     return data
 end
 
-function controller()
-    chests_up = 6
-    chests_for= 17
-    num_chests = chests_up*chests_for
-    chest_cap = 54*64
-    
-    storage_pos = vector.new(169,63,-45)
-    storage_ori = vector.new(0,0,1)
-    input_pos = vector.new(170,64,-46)
-    input_ori = vector.new(-1,0,0)
-    input_str = vector_to_str(input_pos,input_ori)
-    output_pos = vector.new(168,63,-45)
-    output_ori = vector.new(-1,0,0)
-    output_str = vector_to_str(output_pos,output_ori)
+function controller_move_items_to(chest1,chest2)
+    chest1_str = vector_to_str(chest1["pos"],chest1["ori"])
+    chest2_str = vector_to_str(chest2["pos"],chest2["ori"])
+    logistic_turtle_id = nil
+    while not logistic_turtle_id do
+        print("search for logistic turtles")
+        logistic_turtle_id = rednet.lookup("remote_control")
+        if not logistic_turtle_id then
+            coroutine.yield()
+        end
+    end
+    msg = "logistic move "..chest1_str.." "..chest2_str.." "..it_count
+    print("send items from chest",chest1_str,"to chest",chest2_str)
+    rednet.send(logistic_turtle_id, msg,"remote_control")
+end
 
-    datapath = "logistic_data.csv"
-    if fs.find(datapath)[1] == nil then
-        free_chests = {}
-        for x=1,chests_for do
-            for y=1,chests_up do
-                i = y + ((x-1)*chests_up)
-                free_chests[i] = {}
-                free_chests[i]["pos"] = storage_pos:add(vector.new(x-1,y-1,0))
-                free_chests[i]["ori"] = storage_ori
-                free_chests[i]["items"] = 0
+function controller_logistic_request(logistic_data,item_name,item_count)
+    chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
+    if not chest then
+        print("Could not find",msg)
+    elseif (chest["items"] - item_count) < 0 then
+        --print("Dont have enough items for",msg)
+        first_batch_item_count = chest["items"]
+        controller_logistic_request(logistic_data,item_name,first_batch_item_count)
+        controller_logistic_request(logistic_data,item_name,item_count - first_batch_item_count)
+        return
+    else
+        return coroutine.create(function ()
+            controller_move_items_to(chest,output_chest)
+            chest["items"] = chest["items"] - item_count
+            if chest["items"] == 0 then
+                logistic_data["filled"][item_name] = nil
+                table.insert(logistic_data["free"],chest)
+            end
+            save_data(logistic_data,datapath)
+        end)
+    end
+end
+
+function controller_presorter_insert(logistic_data,item_name,item_count)
+    if logistic_data["filled"][item_name] then
+        chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
+        if (chest["items"] + item_count) > chest_cap then
+            chest = nil
+        end
+    end
+    if not chest then
+        for i=1,num_chests do
+            ch = logistic_data["free"][i]
+            if ch ~= nil then
+                logistic_data["filled"][item_name] = ch
+                table.remove(logistic_data["free"], i)
+                print("found free chest",i)
+                chest = ch
+                break
             end
         end
-        filled_chests = {}
-        logistic_data = {}
-        logistic_data["free"] = free_chests
-        logistic_data["filled"] = filled_chests
-        save_data(logistic_data,datapath)
+    end
+    if not chest then
+        print("Could not process item. No free chest found!")
+    elseif (chest["items"] + item_count) > chest_cap then
+        print("Cant put items as chest limit exceeded! (or no free chests)")
+    else
+        return coroutine.create(function () 
+            controller_move_items_to(input_chest,chest)
+            chest["items"] = chest["items"] + item_count
+            save_data(logistic_data,datapath)
+        end)
+    end
+end
+
+function controller()
+    num_chests = 0
+    queue_request = List.new()
+    queue_sorter = List.new()
+
+    if fs.find(datapath)[1] == nil then
+        error("could not find logistic_file.csv")
     else
         logistic_data = load_data(datapath)
+        for k1,v1 in pairs(logistic_data["free"]) do
+            num_chests = num_chests + 1
+        end
+        for k1,v1 in pairs(logistic_data["filled"]) do
+            for k2,v2 in pairs(v) do 
+                num_chests = num_chests + 1
+            end
+        end
     end
     
     peripheral.find("modem", rednet.open)
@@ -153,63 +241,22 @@ function controller()
             it_name = spl[1]
             it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            if not logistic_data["filled"][it_name] then
-                for i=1,num_chests do
-                    ch = logistic_data["free"][i]
-                    if ch ~= nil then
-                        logistic_data["filled"][it_name] = ch
-                        table.remove(logistic_data["free"], i)
-                        print("found free chest",i)
-                        break
-                    end
-                end
-            end
-            chest = logistic_data["filled"][it_name]
-            if not chest then
-                print("Could not process item. No free chest found!")
-            elseif (chest["items"] + it_count) > chest_cap then
-                print("Cant put items as chest limit exceeded!")
-            else
-                chest_str = vector_to_str(chest["pos"],chest["ori"])
-                logistic_turtle_id = nil
-                while not logistic_turtle_id do
-                    print("search for logistic turtles")
-                    logistic_turtle_id = rednet.lookup("remote_control")
-                    if not logistic_turtle_id then
-                        sleep()
-                    end
-                end
-                msg = "logistic move "..input_str.." "..chest_str.." "..it_count
-                print("send to chest",chest_str)
-                rednet.send(logistic_turtle_id, msg,"remote_control")
-                chest["items"] = chest["items"] + it_count
-                save_data(logistic_data,datapath)
-            end
+            queue_sorter:pushleft(controller_presorter_insert(logistic_data,it_name,it_count))
         elseif cid and prot == "logistic_request" then
             msg_split = mysplit(msg," ")
             print("process request for",msg)
             item_name = "minecraft:"..msg_split[1]
             it_count = tonumber(msg_split[2])
-            chest = logistic_data["filled"][item_name]
-            if not chest then
-                print("Could not find",msg)
-            elseif (chest["items"] - it_count) < 0 then
-                print("Dont have enough items for",msg)
-            else
-                chest_str = vector_to_str(chest["pos"],chest["ori"])
-                logistic_turtle_id = nil
-                while not logistic_turtle_id do
-                    print("search for logistic turtles")
-                    logistic_turtle_id = rednet.lookup("remote_control")
-                    if not logistic_turtle_id then
-                        sleep()
-                    end
+            queue_request:pushleft(controller_logistic_request(logistic_data,item_name,it_count))
+        else
+            co = queue_request:popright()
+            if co == nil then
+                co = queue_sorter:popright()
+            end
+            if co ~= nil then
+                if co.continue() then
+                    queue_request:pushleft(co)
                 end
-                msg = "logistic move "..chest_str.." "..output_str.." "..it_count
-                print("get item")
-                rednet.send(logistic_turtle_id,msg,"remote_control")
-                chest["items"] = chest["items"] - it_count
-                save_data(logistic_data,datapath)                
             end
         end
     end
