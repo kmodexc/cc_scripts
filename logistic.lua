@@ -1,6 +1,7 @@
 require("movement")
+require("queue")
 
-print("Logistic V43")
+print("Logistic V44")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -11,25 +12,6 @@ output_chest = {}
 output_chest["pos"] = vector.new(168,63,-45)
 output_chest["ori"] = vector.new(-1,0,0)
 
-List = {}
-function List.new ()
-    return {first = 0, last = -1}
-end
-function List.pushleft (list, value)
-    local first = list.first - 1
-    list.first = first
-    list[first] = value
-end
-function List.popright (list)
-    local last = list.last
-    if list.first > last then 
-        return nil
-    end
-    local value = list[last]
-    list[last] = nil         -- to allow garbage collection
-    list.last = last - 1
-    return value
-end
 
 function findchest(pos,ori)
     local logistic_data = load_data(datapath)
@@ -221,7 +203,7 @@ function controller_move_items_to(chest1,chest2,item_count)
         print("search for logistic turtles")
         logistic_turtle_id = rednet.lookup("remote_control")
         if not logistic_turtle_id then
-            --coroutine.yield()
+            coroutine.yield()
         end
     end
     local msg = "logistic move "..chest1_str.." "..chest2_str.." "..item_count
@@ -292,7 +274,7 @@ end
 
 function coroutine_continue_next(queue)
     local co = List.popright(queue)
-    if co ~= nil then
+    if co then
         if coroutine.resume(co) then
             List.pushleft(queue,co)
         end
@@ -333,7 +315,7 @@ function controller()
             local it_name = spl[1]
             local it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            controller_presorter_insert(it_name,it_count)
+            List.pushleft(queue_request,coroutine.create(controller_presorter_insert,it_name,it_count))
         elseif cid and prot == "logistic_request" then
             local msg_split = mysplit(msg," ")
             print("process request for",msg)
@@ -342,6 +324,9 @@ function controller()
             local it_count = tonumber(msg_split[2])
             write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
             controller_logistic_request(item_name,it_count)
+        else
+            print("run coroutine")
+            coroutine_continue_next(queue_request)
         end
     end
 end
