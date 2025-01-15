@@ -16,7 +16,8 @@ local function get(sFile)
 
     local cacheBuster = ("%x"):format(math.random(0, 2 ^ 30))
     local response, err = http.get(
-        "https://raw.githubusercontent.com/kmodexc/cc_scripts/refs/heads/main/" .. (sFile) .. "?cb=" .. cacheBuster
+    --    "https://raw.githubusercontent.com/kmodexc/cc_scripts/refs/heads/main/" .. (sFile) .. "?cb=" .. cacheBuster
+    "http://kmode.dev:40000/" .. (sFile) .. "?cb=" .. cacheBuster
     )
 
     if not response then
