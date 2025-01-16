@@ -261,12 +261,13 @@ function controller_presorter_insert(item_name,item_count)
                 print("a")
                 print(logistic_data)
                 print("aa")
-                print(logistic_data["filled"])
+                tbl_filled = logistic_data["filled"]
+                print(tbl_filled)
                 print("aaa")
-                print(logistic_data["filled"][item_name])
-                if logistic_data["filled"][item_name] == nil then
+                print(tbl_filled[item_name])
+                if tbl_filled[item_name] == nil then
                     print("aaaa")
-                    logistic_data["filled"][item_name] = {}
+                    tbl_filled[item_name] = {}
                     print("aaaaa")
                 end
                 print("4loop"..i)
