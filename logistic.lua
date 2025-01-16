@@ -238,6 +238,7 @@ function controller_logistic_request(item_name,item_count)
 end
 
 function controller_presorter_insert(item_name,item_count)
+    print("start insert")
     local chest = nil
     local logistic_data = load_data(datapath)
     if logistic_data["filled"][item_name] then
