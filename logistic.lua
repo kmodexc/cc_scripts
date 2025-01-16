@@ -247,6 +247,7 @@ function controller_presorter_insert(item_name,item_count)
             chest = nil
         end
     end
+    print("pos1")
     if not chest then
         for i=1,num_chests do
             local ch = logistic_data["free"][i]
@@ -262,6 +263,7 @@ function controller_presorter_insert(item_name,item_count)
             end
         end
     end
+    print("pos2")
     if not chest then
         print("Could not process item. No free chest found!")
     elseif (chest["items"] + item_count) > chest_cap then
