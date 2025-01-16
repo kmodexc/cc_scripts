@@ -251,6 +251,7 @@ function controller_presorter_insert(item_name,item_count)
     end
     print("pos1")
     if not chest then
+        print("ho")
         for i=1,num_chests do
             print("loop")
             local ch = logistic_data["free"][i]
@@ -265,6 +266,8 @@ function controller_presorter_insert(item_name,item_count)
                 break
             end
         end
+    else
+        print("hey")
     end
     print("pos2")
     if not chest then
