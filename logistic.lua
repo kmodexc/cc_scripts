@@ -258,6 +258,7 @@ function controller_presorter_insert(item_name,item_count)
             print("2loop"..i)
             if ch ~= nil then
                 print("3loop"..i)
+                print("aa"..logistic_data["filled"])
                 if not logistic_data["filled"][item_name] then
                     logistic_data["filled"][item_name] = {}
                 end
