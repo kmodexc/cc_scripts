@@ -283,7 +283,9 @@ function coroutine_continue_next(queue)
     if co then
         if coroutine.resume(co) then
             List.pushleft(queue,co)
+            print("coroutine pushed")
         end
+        print(coroutine.status(co))
         return true
     end
     return false
