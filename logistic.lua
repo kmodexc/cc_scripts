@@ -265,14 +265,15 @@ function controller_presorter_insert(item_name,item_count)
                 print("aaa")
                 print(logistic_data["filled"][item_name])
                 if logistic_data["filled"][item_name] == nil then
+                    print("aaaa")
                     logistic_data["filled"][item_name] = {}
                 end
                 print("4loop"..i)
-                table.insert(logistic_data["filled"][item_name],ch)
-                table.remove(logistic_data["free"], i)
+                --table.insert(logistic_data["filled"][item_name],ch)
+                --table.remove(logistic_data["free"], i)
                 print("found free chest",i)
-                chest = ch
-                break
+                --chest = ch
+                --break
             end
         end
     else
