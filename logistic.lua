@@ -1,7 +1,7 @@
 require("movement")
 require("queue")
 
-print("Logistic V45")
+print("Logistic V46")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -324,12 +324,10 @@ function controller()
             local item_name = "minecraft:"..msg_split[1]
             local it_count = tonumber(msg_split[2])
             write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
-            List.pushleft(queue_sorter,coroutine.create(controller_logistic_request,item_name,it_count))
+            controller_logistic_request(item_name,it_count)
         else
-            print("run coroutine")
             if not coroutine_continue_next(queue_request) then
-                print("no job in request")
-                coroutine_continue_next(queue_sorter)
+                print("no coroutine")
             else
                 print("processed request")
             end
