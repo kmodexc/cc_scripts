@@ -278,8 +278,9 @@ function coroutine_continue_next(queue)
         if coroutine.resume(co) then
             List.pushleft(queue,co)
         end
+        return true
     end
-    return co
+    return false
 end
 
 function write_monitor(msg,line)
