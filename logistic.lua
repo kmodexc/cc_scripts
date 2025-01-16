@@ -267,6 +267,7 @@ function controller_presorter_insert(item_name,item_count)
                 if logistic_data["filled"][item_name] == nil then
                     print("aaaa")
                     logistic_data["filled"][item_name] = {}
+                    print("aaaaa")
                 end
                 print("4loop"..i)
                 --table.insert(logistic_data["filled"][item_name],ch)
