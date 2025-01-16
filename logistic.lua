@@ -203,7 +203,7 @@ function controller_move_items_to(chest1,chest2,item_count)
         print("search for logistic turtles")
         logistic_turtle_id = rednet.lookup("remote_control")
         if not logistic_turtle_id then
-            coroutine.yield()
+            --coroutine.yield()
         end
     end
     local msg = "logistic move "..chest1_str.." "..chest2_str.." "..item_count
@@ -238,56 +238,34 @@ function controller_logistic_request(item_name,item_count)
 end
 
 function controller_presorter_insert(item_name,item_count)
-    print("start insert")
     local chest = nil
-    print("pos preload")
     local logistic_data = load_data(datapath)
-    print("pos postload")
     if logistic_data["filled"][item_name] then
         chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
         if (chest["items"] + item_count) > chest_cap then
             chest = nil
         end
     end
-    print("pos1")
     if not chest then
-        print("ho")
         for i=1,num_chests do
-            print("1loop"..i)
             local ch = logistic_data["free"][i]
-            print("2loop"..i)
             if ch ~= nil then
-                print("3loop"..i)
-                print("a")
-                print(logistic_data)
-                print("aa")
                 tbl_filled = logistic_data["filled"]
-                print(tbl_filled)
-                print("aaa")
-                print(tbl_filled[item_name])
                 if tbl_filled[item_name] == nil then
-                    print("aaaa")
                     tbl_filled[item_name] = {}
-                    print("aaaaa")
                 end
-                print("4loop"..i)
-                --table.insert(logistic_data["filled"][item_name],ch)
-                --table.remove(logistic_data["free"], i)
-                print("found free chest",i)
-                --chest = ch
-                --break
+                table.insert(logistic_data["filled"][item_name],ch)
+                table.remove(logistic_data["free"], i)
+                chest = ch
+                break
             end
         end
-    else
-        print("hey")
     end
-    print("pos2")
     if not chest then
         print("Could not process item. No free chest found!")
     elseif (chest["items"] + item_count) > chest_cap then
         print("Cant put items as chest limit exceeded! (or no free chests)")
     else
-        print("Send items")
         controller_move_items_to(input_chest,chest,item_count)
         chest["items"] = chest["items"] + item_count
         save_data(logistic_data,datapath)
@@ -299,7 +277,6 @@ function coroutine_continue_next(queue)
     if co then
         if coroutine.resume(co) then
             List.pushleft(queue,co)
-            print("coroutine pushed")
         end
         print(coroutine.status(co))
         return true
@@ -340,7 +317,7 @@ function controller()
             local it_name = spl[1]
             local it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            List.pushleft(queue_sorter,coroutine.create(controller_presorter_insert,it_name,it_count))
+            controller_presorter_insert(it_name,it_count)
         elseif cid and prot == "logistic_request" then
             local msg_split = mysplit(msg," ")
             print("process request for",msg)
@@ -349,12 +326,6 @@ function controller()
             local it_count = tonumber(msg_split[2])
             write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
             controller_logistic_request(item_name,it_count)
-        else
-            if not coroutine_continue_next(queue_sorter) then
-                print("no coroutine")
-            else
-                print("processed request")
-            end
         end
     end
 end
