@@ -1,7 +1,7 @@
 require("movement")
 require("queue")
 
-print("Logistic V46")
+print("Logistic V47")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -292,7 +292,7 @@ end
 
 function controller()
     num_chests = 0
-    local queue_request = List.new()
+    --local queue_request = List.new()
     local queue_sorter = List.new()
 
     if fs.find(datapath)[1] == nil then
@@ -317,7 +317,7 @@ function controller()
             local it_name = spl[1]
             local it_count = spl[2]
             print("received",it_count,"items of",it_name)
-            List.pushleft(queue_request,coroutine.create(controller_presorter_insert,it_name,it_count))
+            List.pushleft(queue_sorter,coroutine.create(controller_presorter_insert,it_name,it_count))
         elseif cid and prot == "logistic_request" then
             local msg_split = mysplit(msg," ")
             print("process request for",msg)
@@ -327,7 +327,7 @@ function controller()
             write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
             controller_logistic_request(item_name,it_count)
         else
-            if not coroutine_continue_next(queue_request) then
+            if not coroutine_continue_next(queue_sorter) then
                 print("no coroutine")
             else
                 print("processed request")
