@@ -240,7 +240,9 @@ end
 function controller_presorter_insert(item_name,item_count)
     print("start insert")
     local chest = nil
+    print("pos preload")
     local logistic_data = load_data(datapath)
+    print("pos postload")
     if logistic_data["filled"][item_name] then
         chest = logistic_data["filled"][item_name][#logistic_data["filled"][item_name]]
         if (chest["items"] + item_count) > chest_cap then
