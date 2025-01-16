@@ -323,10 +323,13 @@ function controller()
             local item_name = "minecraft:"..msg_split[1]
             local it_count = tonumber(msg_split[2])
             write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
-            controller_logistic_request(item_name,it_count)
+            List.pushleft(queue_sorter,coroutine.create(controller_logistic_request,item_name,it_count))
         else
             print("run coroutine")
-            coroutine_continue_next(queue_request)
+            if not coroutine_continue_next(queue_request) then
+                print("no job in request, go sorter")
+                coroutine_continue_next(queue_sorter)
+            end
         end
     end
 end
