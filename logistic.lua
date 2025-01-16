@@ -1,7 +1,7 @@
 require("movement")
 require("queue")
 
-print("Logistic V44")
+print("Logistic V45")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -328,8 +328,10 @@ function controller()
         else
             print("run coroutine")
             if not coroutine_continue_next(queue_request) then
-                print("no job in request, go sorter")
+                print("no job in request")
                 coroutine_continue_next(queue_sorter)
+            else
+                print("processed request")
             end
         end
     end
