@@ -253,7 +253,7 @@ function controller_presorter_insert(item_name,item_count)
     if not chest then
         print("ho")
         for i=1,num_chests do
-            print("loop")
+            print("loop"..i)
             local ch = logistic_data["free"][i]
             if ch ~= nil then
                 if not logistic_data["filled"][item_name] then
