@@ -267,6 +267,7 @@ function controller_presorter_insert(item_name,item_count)
     elseif (chest["items"] + item_count) > chest_cap then
         print("Cant put items as chest limit exceeded! (or no free chests)")
     else
+        print("Send items")
         controller_move_items_to(input_chest,chest,item_count)
         chest["items"] = chest["items"] + item_count
         save_data(logistic_data,datapath)
