@@ -3,13 +3,15 @@ files = {
     "composter",
     "farm",
     "line",
+    "logistic",
     "makeroom",
     "movement",
+    "moveto",
     "mytunnel",
     "puttop",
-    "savetunnel",
+    "queue",
     "remote_control",
-    "logistic"
+    "savetunnel"
 }
 
 local function get(sFile)
