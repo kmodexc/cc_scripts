@@ -1,11 +1,12 @@
-line_x = {-3,-1,1,3}
-line_y = 1
-line_len = 8
+line_x = {0,1,2,3,5,6,7,8}
+line_y = 3
+line_len = 99
 
-water_pos_x = { -2, 2 }
+water_pos_x = {}
 
 require("movement")
 
+print("Farm V1")
 
 function farm_line(x)
     for y=line_y,(line_y + line_len) do
@@ -50,6 +51,7 @@ function farm()
     print("return home")
 
     move_to(0,0)
+    set_dir(0,1)
 
     print("remove all items")
     for i=2,16 do
