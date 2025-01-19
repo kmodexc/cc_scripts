@@ -6,7 +6,7 @@ water_pos_x = {}
 
 require("movement")
 
-print("Farm V1")
+print("Farm V2")
 
 function farm_line(x)
     for y=line_y,(line_y + line_len) do
@@ -36,27 +36,31 @@ end
 
 function farm()
 
-    turtle.select(1)
+    while true do
 
-    for k,line_x in pairs(line_x) do
-        print("farm line "..line_x)
-        farm_line(line_x)
-    end
+        turtle.select(1)
 
-    for k,water_x in pairs(water_pos_x) do
-        print("suck items "..water_x)
-        suck_items(water_x)
-    end
+        for k,line_x in pairs(line_x) do
+            print("farm line "..line_x)
+            farm_line(line_x)
+        end
 
-    print("return home")
+        for k,water_x in pairs(water_pos_x) do
+            print("suck items "..water_x)
+            suck_items(water_x)
+        end
 
-    move_to(0,0)
-    set_dir(0,1)
+        print("return home")
 
-    print("remove all items")
-    for i=2,16 do
-        turtle.select(i)
-        turtle.dropDown()
+        move_to(0,0)
+        set_dir(0,1)
+
+        print("remove all items")
+        for i=2,16 do
+            turtle.select(i)
+            turtle.dropDown()
+        end
+
     end
 
 end
