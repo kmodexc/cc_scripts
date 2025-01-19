@@ -1,7 +1,7 @@
 require("movement")
 require("queue")
 
-print("Logistic V48")
+print("Logistic V49")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -285,7 +285,7 @@ function coroutine_continue_next(queue)
 end
 
 function write_monitor(msg,line)
-    monitor = peripheral.find("monitor")
+    local monitor = peripheral.find("monitor")
     monitor.setCursorPos(1,line)
     monitor.write(msg)
 end
@@ -321,6 +321,7 @@ function controller()
         elseif cid and prot == "logistic_request" then
             local msg_split = mysplit(msg," ")
             print("process request for",msg)
+            peripheral.find("monitor").clear()
             write_monitor(msg,1)
             local item_name = "minecraft:"..msg_split[1]
             local it_count = tonumber(msg_split[2])
