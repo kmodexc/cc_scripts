@@ -1,7 +1,7 @@
 require("movement")
 require("queue")
 
-print("Logistic V47")
+print("Logistic V48")
 
 chest_cap = 54*64
 datapath = "logistic_data.csv"
@@ -188,7 +188,7 @@ function count_item(logistic_data, item_name)
     if logistic_data["filled"][item_name] == nil then
         return 0
     end
-    item_count = 0
+    local item_count = 0
     for k1,v1 in pairs(logistic_data["filled"][item_name]) do
         item_count = item_count + v1["items"]
     end
@@ -324,7 +324,7 @@ function controller()
             write_monitor(msg,1)
             local item_name = "minecraft:"..msg_split[1]
             local it_count = tonumber(msg_split[2])
-            write_monitor("have in total "..count_item(load_data(datapath),"minecraft:"..item_name),2)
+            write_monitor("have in total "..count_item(load_data(datapath),item_name),2)
             controller_logistic_request(item_name,it_count)
         end
     end
